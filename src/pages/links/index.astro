@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const links = await getCollection('links');
+const sortedLinks = links.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout title="Links" description="Curated links with commentary.">
+  <section>
+    <h1 class="text-3xl font-semibold mb-4">Links</h1>
+    <p class="text-[var(--color-text-muted)] mb-12">
+      Curated links to things I find interesting, with occasional commentary.
+    </p>
+
+    {sortedLinks.length === 0 ? (
+      <p class="text-[var(--color-text-muted)]">No links yet. Check back soon.</p>
+    ) : (
+      <ul class="space-y-8">
+        {sortedLinks.map((link) => (
+          <li class="border-b border-[var(--color-border)] pb-6 last:border-0">
+            <a
+              href={link.data.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-lg font-medium hover:text-[var(--color-accent)] transition-colors"
+            >
+              {link.data.title} &nearr;
+            </a>
+            <time class="text-sm text-[var(--color-text-muted)] block mt-1">
+              {link.data.date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+            </time>
+            {link.data.tags && link.data.tags.length > 0 && (
+              <div class="flex gap-2 mt-2">
+                {link.data.tags.map((tag: string) => (
+                  <span class="text-xs bg-[var(--color-bg-alt)] px-2 py-1 rounded">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
+</BaseLayout>

@@ -1,0 +1,30 @@
+---
+title: "Building Robust Data Pipelines"
+description: "Lessons learned from building data infrastructure that scales."
+date: 2024-02-10
+tags: ["data", "engineering"]
+---
+
+This is a placeholder post about data pipelines. Replace this with your actual content.
+
+## The Challenge
+
+Building data pipelines that are both reliable and maintainable is harder than it looks.
+
+## Key Principles
+
+1. **Idempotency** - Operations should be safe to retry
+2. **Observability** - You can't fix what you can't see
+3. **Simplicity** - The best pipeline is one you can understand at 3am
+
+## Code Example
+
+```python
+def process_batch(records):
+    """Process a batch of records idempotently."""
+    for record in records:
+        if not already_processed(record.id):
+            transform_and_load(record)
+```
+
+More details to come in future posts.
