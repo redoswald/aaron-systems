@@ -36,6 +36,16 @@ const {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
     <title>{title} | aaron.systems</title>
+    <script is:inline>
+      // Prevent flash of wrong theme
+      (function() {
+        const saved = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (saved === 'light' || (!saved && !prefersDark)) {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      })();
+    </script>
   </head>
   <body class="h-screen overflow-hidden flex flex-col">
     <!-- Desktop IDE Layout -->
@@ -106,8 +116,16 @@ const {
         </div>
       </main>
 
-      <footer class="bg-[var(--color-bg-alt)] border-t border-[var(--color-border)] p-4 text-center text-xs text-[var(--color-text-muted)]">
-        aaron.systems
+      <footer class="bg-[var(--color-bg-alt)] border-t border-[var(--color-border)] p-4 flex items-center justify-between text-xs text-[var(--color-text-muted)]">
+        <span>aaron.systems</span>
+        <button id="mobile-theme-toggle" class="flex items-center gap-2 px-2 py-1 rounded" aria-label="Toggle theme">
+          <svg id="mobile-sun-icon" class="w-4 h-4 hidden" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd" />
+          </svg>
+          <svg id="mobile-moon-icon" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+          </svg>
+        </button>
       </footer>
     </div>
 
@@ -125,6 +143,31 @@ const {
 
       menuBtn?.addEventListener('click', () => {
         menu?.classList.toggle('hidden');
+      });
+
+      // Mobile theme toggle
+      const mobileToggle = document.getElementById('mobile-theme-toggle');
+      const mobileSun = document.getElementById('mobile-sun-icon');
+      const mobileMoon = document.getElementById('mobile-moon-icon');
+
+      function updateMobileIcons() {
+        const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+        mobileSun?.classList.toggle('hidden', !isLight);
+        mobileMoon?.classList.toggle('hidden', isLight);
+      }
+
+      updateMobileIcons();
+
+      mobileToggle?.addEventListener('click', () => {
+        const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+        if (isLight) {
+          document.documentElement.removeAttribute('data-theme');
+          localStorage.setItem('theme', 'dark');
+        } else {
+          document.documentElement.setAttribute('data-theme', 'light');
+          localStorage.setItem('theme', 'light');
+        }
+        updateMobileIcons();
       });
     </script>
   </body>

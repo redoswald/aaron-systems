@@ -3,8 +3,10 @@
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
 
-  /* Dark IDE theme (Darcula-inspired) */
+/* Dark theme (default) - Darcula-inspired */
+:root {
   --color-bg: #1e1e1e;
   --color-bg-alt: #252526;
   --color-bg-panel: #2d2d2d;
@@ -35,6 +37,38 @@
   --color-scrollbar-hover: #4a4a4a;
 }
 
+/* Light theme - IntelliJ-inspired */
+[data-theme="light"] {
+  --color-bg: #f5f5f5;
+  --color-bg-alt: #ffffff;
+  --color-bg-panel: #f9f9f9;
+  --color-bg-hover: #e8e8e8;
+  --color-bg-active: #cce5ff;
+
+  --color-text: #2b2b2b;
+  --color-text-muted: #6e6e6e;
+  --color-text-bright: #000000;
+
+  --color-border: #d1d1d1;
+  --color-border-subtle: #e8e8e8;
+
+  --color-accent: #0366d6;
+  --color-accent-hover: #0550ae;
+
+  /* Syntax colors - light mode */
+  --color-keyword: #0033b3;
+  --color-string: #067d17;
+  --color-number: #1750eb;
+  --color-comment: #8c8c8c;
+  --color-function: #00627a;
+
+  /* UI colors */
+  --color-tab-active: #ffffff;
+  --color-tab-inactive: #ececec;
+  --color-scrollbar: #c1c1c1;
+  --color-scrollbar-hover: #a8a8a8;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -47,6 +81,7 @@ body {
   font-size: 13px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 ::selection {
@@ -87,6 +122,7 @@ a:hover {
 .ide-panel {
   background-color: var(--color-bg-panel);
   border-color: var(--color-border);
+  transition: background-color 0.2s ease;
 }
 
 .ide-panel-header {
@@ -98,6 +134,7 @@ a:hover {
   letter-spacing: 0.5px;
   padding: 6px 12px;
   border-bottom: 1px solid var(--color-border);
+  transition: background-color 0.2s ease;
 }
 
 /* Tree view styles */
@@ -108,6 +145,7 @@ a:hover {
   cursor: pointer;
   color: var(--color-text);
   font-size: 13px;
+  transition: background-color 0.1s ease;
 }
 
 .tree-item:hover {
@@ -148,6 +186,7 @@ a:hover {
   font-size: 12px;
   cursor: pointer;
   gap: 8px;
+  transition: background-color 0.1s ease;
 }
 
 .ide-tab:hover {
@@ -305,11 +344,17 @@ a:hover {
 /* Status bar */
 .status-bar {
   background-color: var(--color-bg-active);
-  color: var(--color-text);
+  color: var(--color-text-bright);
   font-size: 12px;
   padding: 2px 12px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+}
+
+[data-theme="light"] .status-bar {
+  background-color: #0366d6;
+  color: #ffffff;
 }
 
 /* Menu bar */
@@ -319,6 +364,7 @@ a:hover {
   padding: 0 8px;
   display: flex;
   gap: 0;
+  transition: background-color 0.2s ease;
 }
 
 .menu-item {
@@ -330,4 +376,24 @@ a:hover {
 
 .menu-item:hover {
   background-color: var(--color-bg-hover);
+}
+
+/* Theme toggle button */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+  font-size: 11px;
+}
+
+.theme-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="light"] .theme-toggle:hover {
+  background-color: rgba(0, 0, 0, 0.1);
 }
