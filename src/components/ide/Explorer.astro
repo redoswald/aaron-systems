@@ -1,0 +1,130 @@
+---
+import { getCollection } from 'astro:content';
+
+interface Props {
+  currentPath?: string;
+}
+
+const { currentPath = '/' } = Astro.props;
+
+const blogPosts = await getCollection('blog', ({ data }) => !data.draft);
+const projects = await getCollection('projects');
+const links = await getCollection('links');
+
+const sortedBlog = blogPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const sortedProjects = projects.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const sortedLinks = links.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+function isActive(path: string) {
+  return currentPath === path || currentPath.startsWith(path + '/');
+}
+---
+
+<div class="flex-1 overflow-auto">
+  <div class="ide-panel-header">Explorer</div>
+
+  <div class="p-2">
+    <!-- Home -->
+    <a href="/" class={`tree-item ${currentPath === '/' ? 'active' : ''}`} style="padding-left: 8px;">
+      <svg class="tree-icon" viewBox="0 0 16 16" fill="currentColor">
+        <path d="M8 1l7 5v9H1V6l7-5zm0 1.5L2.5 6.5V14h11V6.5L8 2.5z"/>
+      </svg>
+      <span>home</span>
+    </a>
+
+    <!-- Blog section -->
+    <details open class="group">
+      <summary class="tree-item" style="padding-left: 8px;">
+        <svg class="tree-chevron group-open:expanded" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M6 4l4 4-4 4V4z"/>
+        </svg>
+        <svg class="tree-icon" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M1 3h14v1H1V3zm0 4h14v1H1V7zm0 4h10v1H1v-1z"/>
+        </svg>
+        <span>blog</span>
+      </summary>
+      <div>
+        {sortedBlog.map(post => (
+          <a
+            href={`/blog/${post.id}`}
+            class={`tree-item ${isActive(`/blog/${post.id}`) ? 'active' : ''}`}
+            style="padding-left: 40px;"
+          >
+            <svg class="tree-icon text-[var(--color-string)]" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M3 1h10l2 2v12H1V1h2zm1 1v12h10V4l-1-1H4V2z"/>
+            </svg>
+            <span class="truncate">{post.id}.mdx</span>
+          </a>
+        ))}
+      </div>
+    </details>
+
+    <!-- Projects section -->
+    <details open class="group">
+      <summary class="tree-item" style="padding-left: 8px;">
+        <svg class="tree-chevron group-open:expanded" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M6 4l4 4-4 4V4z"/>
+        </svg>
+        <svg class="tree-icon" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M1 2h5l2 2h7v10H1V2zm1 1v10h12V5H7.5L5.5 3H2z"/>
+        </svg>
+        <span>projects</span>
+      </summary>
+      <div>
+        {sortedProjects.map(project => (
+          <a
+            href={`/projects/${project.id}`}
+            class={`tree-item ${isActive(`/projects/${project.id}`) ? 'active' : ''}`}
+            style="padding-left: 40px;"
+          >
+            <svg class="tree-icon text-[var(--color-function)]" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M3 1h10l2 2v12H1V1h2zm1 1v12h10V4l-1-1H4V2z"/>
+            </svg>
+            <span class="truncate">{project.id}.mdx</span>
+          </a>
+        ))}
+      </div>
+    </details>
+
+    <!-- Links section -->
+    <details open class="group">
+      <summary class="tree-item" style="padding-left: 8px;">
+        <svg class="tree-chevron group-open:expanded" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M6 4l4 4-4 4V4z"/>
+        </svg>
+        <svg class="tree-icon" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M7.5 1a5.5 5.5 0 014.383 8.823l3.147 3.147-.707.707-3.147-3.147A5.5 5.5 0 117.5 1zm0 1a4.5 4.5 0 100 9 4.5 4.5 0 000-9z"/>
+        </svg>
+        <span>links</span>
+      </summary>
+      <div>
+        <a
+          href="/links"
+          class={`tree-item ${currentPath === '/links' ? 'active' : ''}`}
+          style="padding-left: 40px;"
+        >
+          <svg class="tree-icon text-[var(--color-accent)]" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M3 1h10l2 2v12H1V1h2zm1 1v12h10V4l-1-1H4V2z"/>
+          </svg>
+          <span>index.mdx</span>
+        </a>
+      </div>
+    </details>
+  </div>
+</div>
+
+<style>
+  details > summary {
+    list-style: none;
+    cursor: pointer;
+  }
+  details > summary::-webkit-details-marker {
+    display: none;
+  }
+  .tree-chevron {
+    transition: transform 0.15s ease;
+  }
+  details[open] > summary .tree-chevron {
+    transform: rotate(90deg);
+  }
+</style>

@@ -1,5 +1,5 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import IDELayout from '../../layouts/IDELayout.astro';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -11,32 +11,41 @@ export async function getStaticPaths() {
 }
 
 const { project } = Astro.props;
-const { Content } = await render(project);
+const { Content, headings } = await render(project);
+
+const structureHeadings = headings.map(h => ({
+  depth: h.depth,
+  slug: h.slug,
+  text: h.text
+}));
 ---
 
-<BaseLayout title={project.data.title} description={project.data.description}>
+<IDELayout
+  title={project.data.title}
+  description={project.data.description}
+  currentPath={`/projects/${project.id}`}
+  headings={structureHeadings}
+>
   <article>
     <header class="mb-8">
-      <h1 class="text-3xl font-semibold mb-2">{project.data.title}</h1>
+      <h1 class="!mt-0">{project.data.title}</h1>
       <p class="text-[var(--color-text-muted)]">{project.data.description}</p>
       <div class="flex gap-4 mt-4 text-sm">
         {project.data.link && (
-          <a href={project.data.link} target="_blank" rel="noopener noreferrer">
-            View live &rarr;
+          <a href={project.data.link} target="_blank" rel="noopener noreferrer" class="text-[var(--color-string)]">
+            [View live &rarr;]
           </a>
         )}
         {project.data.repo && (
-          <a href={project.data.repo} target="_blank" rel="noopener noreferrer">
-            Source code &rarr;
+          <a href={project.data.repo} target="_blank" rel="noopener noreferrer" class="text-[var(--color-string)]">
+            [Source code &rarr;]
           </a>
         )}
       </div>
     </header>
-    <div class="prose">
-      <Content />
-    </div>
+    <Content />
   </article>
   <div class="mt-12 pt-8 border-t border-[var(--color-border)]">
-    <a href="/projects" class="text-sm">&larr; Back to projects</a>
+    <a href="/projects" class="text-sm text-[var(--color-accent)]">&larr; SELECT * FROM projects</a>
   </div>
-</BaseLayout>
+</IDELayout>

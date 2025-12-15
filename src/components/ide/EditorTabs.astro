@@ -1,0 +1,32 @@
+---
+interface Props {
+  title: string;
+  currentPath?: string;
+}
+
+const { title, currentPath = '/' } = Astro.props;
+
+// Generate filename from path
+function getFilename(path: string): string {
+  if (path === '/') return 'home.mdx';
+  if (path === '/links') return 'links/index.mdx';
+  const parts = path.split('/').filter(Boolean);
+  return parts.join('/') + '.mdx';
+}
+
+const filename = getFilename(currentPath);
+---
+
+<div class="flex bg-[var(--color-tab-inactive)] border-b border-[var(--color-border)]">
+  <div class="ide-tab active">
+    <svg class="w-4 h-4 text-[var(--color-accent)]" viewBox="0 0 16 16" fill="currentColor">
+      <path d="M3 1h10l2 2v12H1V1h2zm1 1v12h10V4l-1-1H4V2z"/>
+    </svg>
+    <span>{filename}</span>
+    <span class="ide-tab-close">
+      <svg class="w-3 h-3" viewBox="0 0 16 16" fill="currentColor">
+        <path d="M4.5 3.5l7 7m0-7l-7 7" stroke="currentColor" stroke-width="1.5" fill="none"/>
+      </svg>
+    </span>
+  </div>
+</div>

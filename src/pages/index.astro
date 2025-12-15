@@ -1,5 +1,5 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import IDELayout from '../layouts/IDELayout.astro';
 import { getCollection } from 'astro:content';
 
 const allPosts = await getCollection('blog', ({ data }) => !data.draft);
@@ -12,52 +12,57 @@ const recentPosts = allPosts
 const featuredProjects = allProjects
   .filter(p => p.data.featured)
   .slice(0, 3);
+
+const headings = [
+  { depth: 1, slug: 'aaron', text: 'Aaron' },
+  { depth: 2, slug: 'recent-writing', text: 'Recent Writing' },
+  { depth: 2, slug: 'featured-projects', text: 'Featured Projects' },
+];
 ---
 
-<BaseLayout title="Home">
-  <section class="mb-16">
-    <h1 class="text-3xl font-semibold mb-4">Aaron</h1>
-    <p class="text-lg text-[var(--color-text-muted)] mb-6">
+<IDELayout title="Home" currentPath="/" headings={headings}>
+  <section class="mb-12">
+    <h1 id="aaron" class="!mt-0">Aaron</h1>
+    <p class="text-lg text-[var(--color-accent)] mb-4">
       Systems thinker who specializes in data.
     </p>
-    <p class="text-[var(--color-text-muted)]">
-      Based in [Location]. Currently [role/focus]. I write about data systems,
+    <p>
+      Based in Washington, D.C. Currently a Pr. Data Analyst at Capital One. I write about data systems,
       visualization, and the occasional experiment at the intersection of
       technology and creativity.
     </p>
   </section>
 
   {recentPosts.length > 0 && (
-    <section class="mb-16">
-      <h2 class="text-xl font-semibold mb-6">Recent Writing</h2>
-      <ul class="space-y-4">
+    <section class="mb-12">
+      <h2 id="recent-writing">Recent Writing</h2>
+      <ul class="space-y-3">
         {recentPosts.map((post) => (
-          <li>
-            <a href={`/blog/${post.id}`} class="group block">
-              <span class="text-[var(--color-text)] group-hover:text-[var(--color-accent)] transition-colors">
-                {post.data.title}
-              </span>
-              <span class="text-sm text-[var(--color-text-muted)] ml-2">
-                {post.data.date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
-              </span>
+          <li class="flex items-baseline gap-3">
+            <span class="text-[var(--color-keyword)]">--</span>
+            <a href={`/blog/${post.id}`} class="hover:text-[var(--color-accent)]">
+              {post.data.title}
             </a>
+            <span class="text-sm text-[var(--color-text-muted)]">
+              {post.data.date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+            </span>
           </li>
         ))}
       </ul>
-      <a href="/blog" class="inline-block mt-4 text-sm">View all posts &rarr;</a>
+      <a href="/blog" class="inline-block mt-4 text-sm text-[var(--color-accent)]">
+        SELECT * FROM blog &rarr;
+      </a>
     </section>
   )}
 
   {featuredProjects.length > 0 && (
-    <section class="mb-16">
-      <h2 class="text-xl font-semibold mb-6">Featured Projects</h2>
+    <section class="mb-12">
+      <h2 id="featured-projects">Featured Projects</h2>
       <ul class="space-y-4">
         {featuredProjects.map((project) => (
           <li>
             <a href={`/projects/${project.id}`} class="group block">
-              <span class="text-[var(--color-text)] group-hover:text-[var(--color-accent)] transition-colors">
-                {project.data.title}
-              </span>
+              <span class="text-[var(--color-function)]">{project.data.title}</span>
               <p class="text-sm text-[var(--color-text-muted)] mt-1">
                 {project.data.description}
               </p>
@@ -65,16 +70,9 @@ const featuredProjects = allProjects
           </li>
         ))}
       </ul>
-      <a href="/projects" class="inline-block mt-4 text-sm">View all projects &rarr;</a>
+      <a href="/projects" class="inline-block mt-4 text-sm text-[var(--color-accent)]">
+        SELECT * FROM projects &rarr;
+      </a>
     </section>
   )}
-
-  <section>
-    <h2 class="text-xl font-semibold mb-6">Connect</h2>
-    <ul class="flex gap-6 text-sm">
-      <li><a href="https://github.com/yourusername">GitHub</a></li>
-      <li><a href="https://twitter.com/yourusername">Twitter</a></li>
-      <li><a href="mailto:you@example.com">Email</a></li>
-    </ul>
-  </section>
-</BaseLayout>
+</IDELayout>

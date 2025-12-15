@@ -1,0 +1,9 @@
+---
+const menuItems = ['File', 'Edit', 'View', 'Navigate', 'Code', 'Tools', 'Window', 'Help'];
+---
+
+<div class="menu-bar">
+  {menuItems.map(item => (
+    <span class="menu-item">{item}</span>
+  ))}
+</div>

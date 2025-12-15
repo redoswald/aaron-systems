@@ -1,37 +1,46 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import IDELayout from '../../layouts/IDELayout.astro';
 import { getCollection } from 'astro:content';
 
 const projects = await getCollection('projects');
 const sortedProjects = projects.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const headings = [
+  { depth: 1, slug: 'projects', text: 'Projects' },
+  ...sortedProjects.map(p => ({
+    depth: 2,
+    slug: p.id,
+    text: p.data.title
+  }))
+];
 ---
 
-<BaseLayout title="Projects" description="A showcase of things I've built.">
+<IDELayout title="Projects" description="Things I've built." currentPath="/projects" headings={headings}>
   <section>
-    <h1 class="text-3xl font-semibold mb-4">Projects</h1>
-    <p class="text-[var(--color-text-muted)] mb-12">
-      A showcase of things I've built, from data visualizations to experimental tools.
+    <h1 id="projects" class="!mt-0">Projects</h1>
+    <p class="text-[var(--color-comment)] mb-8">
+      -- A showcase of things I've built, from data visualizations to experimental tools.
     </p>
 
     {sortedProjects.length === 0 ? (
-      <p class="text-[var(--color-text-muted)]">No projects yet. Check back soon.</p>
+      <p class="text-[var(--color-text-muted)]">-- No projects yet. Check back soon.</p>
     ) : (
-      <ul class="space-y-10">
+      <ul class="space-y-8">
         {sortedProjects.map((project) => (
-          <li>
+          <li id={project.id}>
             <a href={`/projects/${project.id}`} class="group block">
-              <h2 class="text-lg font-medium text-[var(--color-text)] group-hover:text-[var(--color-accent)] transition-colors">
+              <h2 class="text-lg font-medium text-[var(--color-function)] group-hover:text-[var(--color-accent)] transition-colors !mt-0 !mb-1">
                 {project.data.title}
               </h2>
-              <p class="text-[var(--color-text-muted)] mt-1">
+              <p class="text-[var(--color-text-muted)]">
                 {project.data.description}
               </p>
               <div class="flex gap-4 mt-2 text-sm">
                 {project.data.link && (
-                  <span class="text-[var(--color-accent)]">Live demo</span>
+                  <span class="text-[var(--color-string)]">[live]</span>
                 )}
                 {project.data.repo && (
-                  <span class="text-[var(--color-accent)]">Source</span>
+                  <span class="text-[var(--color-string)]">[source]</span>
                 )}
               </div>
             </a>
@@ -40,4 +49,4 @@ const sortedProjects = projects.sort((a, b) => b.data.date.valueOf() - a.data.da
       </ul>
     )}
   </section>
-</BaseLayout>
+</IDELayout>

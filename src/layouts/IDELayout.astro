@@ -1,0 +1,131 @@
+---
+import '../styles/global.css';
+import MenuBar from '../components/ide/MenuBar.astro';
+import Explorer from '../components/ide/Explorer.astro';
+import EditorTabs from '../components/ide/EditorTabs.astro';
+import StructurePanel from '../components/ide/StructurePanel.astro';
+import ConnectionsPanel from '../components/ide/ConnectionsPanel.astro';
+import OutputPanel from '../components/ide/OutputPanel.astro';
+import StatusBar from '../components/ide/StatusBar.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  headings?: { depth: number; slug: string; text: string }[];
+  outputData?: any;
+  currentPath?: string;
+}
+
+const {
+  title,
+  description = "Aaron's personal site",
+  headings = [],
+  outputData,
+  currentPath = '/'
+} = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <title>{title} | aaron.systems</title>
+  </head>
+  <body class="h-screen overflow-hidden flex flex-col">
+    <!-- Desktop IDE Layout -->
+    <div class="hidden md:flex md:flex-col h-full">
+      <MenuBar />
+
+      <div class="flex-1 grid ide-grid overflow-hidden">
+        <!-- Left sidebar: Explorer + Connections -->
+        <div class="flex flex-col border-r border-[var(--color-border)] overflow-hidden">
+          <Explorer currentPath={currentPath} />
+          <ConnectionsPanel />
+        </div>
+
+        <!-- Main area: Tabs + Editor + Output -->
+        <div class="flex flex-col overflow-hidden">
+          <!-- Top: Tabs + Editor + Structure -->
+          <div class="flex-1 flex overflow-hidden">
+            <div class="flex-1 flex flex-col overflow-hidden">
+              <EditorTabs title={title} currentPath={currentPath} />
+              <div class="flex-1 overflow-auto editor-content">
+                <div class="prose">
+                  <slot />
+                </div>
+              </div>
+            </div>
+            <StructurePanel headings={headings} />
+          </div>
+
+          <!-- Bottom: Output -->
+          <OutputPanel data={outputData} />
+        </div>
+      </div>
+
+      <StatusBar />
+    </div>
+
+    <!-- Mobile Layout -->
+    <div class="md:hidden flex flex-col h-full">
+      <header class="bg-[var(--color-bg-alt)] border-b border-[var(--color-border)] p-4 flex items-center justify-between">
+        <a href="/" class="font-semibold text-[var(--color-text-bright)]">aaron.systems</a>
+        <button id="mobile-menu-btn" class="p-2" aria-label="Menu">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </header>
+
+      <nav id="mobile-menu" class="hidden bg-[var(--color-bg-panel)] border-b border-[var(--color-border)] p-4">
+        <ul class="space-y-2">
+          <li><a href="/" class="block py-2">Home</a></li>
+          <li><a href="/blog" class="block py-2">Blog</a></li>
+          <li><a href="/projects" class="block py-2">Projects</a></li>
+          <li><a href="/links" class="block py-2">Links</a></li>
+        </ul>
+        <div class="mt-4 pt-4 border-t border-[var(--color-border)]">
+          <p class="text-xs text-[var(--color-text-muted)] mb-2">Connect</p>
+          <div class="flex gap-4 text-sm">
+            <a href="https://github.com/redoswald" target="_blank">GitHub</a>
+            <a href="https://linkedin.com/in/aaronoswald" target="_blank">LinkedIn</a>
+            <a href="https://twitter.com/yourusername" target="_blank">Twitter</a>
+          </div>
+        </div>
+      </nav>
+
+      <main class="flex-1 overflow-auto p-6">
+        <div class="prose max-w-none">
+          <slot />
+        </div>
+      </main>
+
+      <footer class="bg-[var(--color-bg-alt)] border-t border-[var(--color-border)] p-4 text-center text-xs text-[var(--color-text-muted)]">
+        aaron.systems
+      </footer>
+    </div>
+
+    <style>
+      .ide-grid {
+        display: grid;
+        grid-template-columns: 240px 1fr;
+        grid-template-rows: 1fr;
+      }
+    </style>
+
+    <script>
+      const menuBtn = document.getElementById('mobile-menu-btn');
+      const menu = document.getElementById('mobile-menu');
+
+      menuBtn?.addEventListener('click', () => {
+        menu?.classList.toggle('hidden');
+      });
+    </script>
+  </body>
+</html>

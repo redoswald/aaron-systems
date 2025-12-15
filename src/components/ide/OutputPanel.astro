@@ -1,0 +1,83 @@
+---
+import { getCollection } from 'astro:content';
+
+interface Props {
+  data?: {
+    type: 'table' | 'code' | 'custom';
+    columns?: string[];
+    rows?: any[][];
+    code?: string;
+    html?: string;
+  };
+}
+
+const { data } = Astro.props;
+
+// Default: show recent posts as a table
+const posts = await getCollection('blog', ({ data }) => !data.draft);
+const projects = await getCollection('projects');
+
+const allContent = [
+  ...posts.map(p => ({ type: 'blog', id: p.id, title: p.data.title, date: p.data.date })),
+  ...projects.map(p => ({ type: 'project', id: p.id, title: p.data.title, date: p.data.date })),
+].sort((a, b) => b.date.valueOf() - a.date.valueOf()).slice(0, 5);
+---
+
+<div class="h-[150px] border-t border-[var(--color-border)] flex flex-col bg-[var(--color-bg-panel)]">
+  <div class="ide-panel-header flex items-center gap-4">
+    <span>Output</span>
+    <span class="text-[10px] text-[var(--color-text-muted)]">
+      {data ? 'Custom output' : 'Recent content'}
+    </span>
+  </div>
+
+  <div class="flex-1 overflow-auto">
+    {data?.type === 'table' && data.columns && data.rows ? (
+      <table class="output-table">
+        <thead>
+          <tr>
+            {data.columns.map(col => <th>{col}</th>)}
+          </tr>
+        </thead>
+        <tbody>
+          {data.rows.map(row => (
+            <tr>
+              {row.map(cell => <td>{cell}</td>)}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    ) : data?.type === 'code' && data.code ? (
+      <pre class="p-3 text-xs font-mono text-[var(--color-text)]">{data.code}</pre>
+    ) : data?.type === 'custom' && data.html ? (
+      <div class="p-3" set:html={data.html} />
+    ) : (
+      <table class="output-table">
+        <thead>
+          <tr>
+            <th>id</th>
+            <th>type</th>
+            <th>title</th>
+            <th>date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {allContent.map((item, i) => (
+            <tr>
+              <td class="text-[var(--color-number)]">{i + 1}</td>
+              <td class="text-[var(--color-keyword)]">{item.type}</td>
+              <td>
+                <a href={`/${item.type === 'blog' ? 'blog' : 'projects'}/${item.id}`} class="hover:underline">
+                  {item.title}
+                </a>
+              </td>
+              <td class="text-[var(--color-text-muted)]">
+                {item.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    )}
+  </div>
+</div>

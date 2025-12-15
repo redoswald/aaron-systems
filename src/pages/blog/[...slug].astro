@@ -1,5 +1,5 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import IDELayout from '../../layouts/IDELayout.astro';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -11,31 +11,43 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
+
+// Transform headings for the Structure panel
+const structureHeadings = headings.map(h => ({
+  depth: h.depth,
+  slug: h.slug,
+  text: h.text
+}));
 ---
 
-<BaseLayout title={post.data.title} description={post.data.description}>
+<IDELayout
+  title={post.data.title}
+  description={post.data.description}
+  currentPath={`/blog/${post.id}`}
+  headings={structureHeadings}
+>
   <article>
     <header class="mb-8">
-      <h1 class="text-3xl font-semibold mb-2">{post.data.title}</h1>
-      <time class="text-sm text-[var(--color-text-muted)]">
-        {post.data.date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
-      </time>
+      <h1 class="!mt-0">{post.data.title}</h1>
+      <div class="flex items-center gap-4 text-sm text-[var(--color-comment)]">
+        <time>
+          -- {post.data.date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+        </time>
+      </div>
       {post.data.tags && post.data.tags.length > 0 && (
         <div class="flex gap-2 mt-3">
           {post.data.tags.map((tag: string) => (
-            <span class="text-xs bg-[var(--color-bg-alt)] px-2 py-1 rounded">
+            <span class="text-xs bg-[var(--color-bg-alt)] text-[var(--color-keyword)] px-2 py-1">
               {tag}
             </span>
           ))}
         </div>
       )}
     </header>
-    <div class="prose">
-      <Content />
-    </div>
+    <Content />
   </article>
   <div class="mt-12 pt-8 border-t border-[var(--color-border)]">
-    <a href="/blog" class="text-sm">&larr; Back to blog</a>
+    <a href="/blog" class="text-sm text-[var(--color-accent)]">&larr; SELECT * FROM blog</a>
   </div>
-</BaseLayout>
+</IDELayout>
