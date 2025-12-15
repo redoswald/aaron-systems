@@ -1,9 +1,981 @@
 ---
-const menuItems = ['File', 'Edit', 'View', 'Navigate', 'Code', 'Tools', 'Window', 'Help'];
+import { getCollection } from 'astro:content';
+
+const recentPosts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 5);
 ---
 
-<div class="menu-bar">
-  {menuItems.map(item => (
-    <span class="menu-item">{item}</span>
-  ))}
+<div class="menu-bar relative" id="menu-bar">
+  <!-- File -->
+  <div class="menu-wrapper">
+    <button class="menu-item" data-menu="file">File</button>
+    <div class="menu-dropdown hidden" id="menu-file">
+      <a href="/contact" class="menu-dropdown-item">
+        <span>New Query...</span>
+        <span class="menu-shortcut">Ctrl+N</span>
+      </a>
+      <div class="menu-dropdown-item has-submenu" data-submenu="recent">
+        <span>Open Recent</span>
+        <span class="menu-arrow">▸</span>
+        <div class="menu-submenu hidden" id="submenu-recent">
+          {recentPosts.map(post => (
+            <a href={`/blog/${post.id}`} class="menu-dropdown-item">
+              {post.data.title}
+            </a>
+          ))}
+          {recentPosts.length === 0 && (
+            <span class="menu-dropdown-item disabled">No recent files</span>
+          )}
+        </div>
+      </div>
+      <div class="menu-divider"></div>
+      <a href="/resume.pdf" download class="menu-dropdown-item">
+        <span>Export Resume.pdf</span>
+        <span class="menu-shortcut">Ctrl+E</span>
+      </a>
+      <div class="menu-divider"></div>
+      <button class="menu-dropdown-item" id="menu-exit">
+        <span>Exit</span>
+        <span class="menu-shortcut">Alt+F4</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Edit -->
+  <div class="menu-wrapper">
+    <button class="menu-item" data-menu="edit">Edit</button>
+    <div class="menu-dropdown hidden" id="menu-edit">
+      <span class="menu-dropdown-item disabled" title="Some mass deceptions cannot be undone">
+        <span>Undo</span>
+        <span class="menu-shortcut">Ctrl+Z</span>
+      </span>
+      <div class="menu-divider"></div>
+      <button class="menu-dropdown-item" id="menu-find">
+        <span>Find...</span>
+        <span class="menu-shortcut">Ctrl+F</span>
+      </button>
+      <div class="menu-divider"></div>
+      <button class="menu-dropdown-item" id="menu-preferences">
+        <span>Preferences...</span>
+        <span class="menu-shortcut">Ctrl+,</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- View -->
+  <div class="menu-wrapper">
+    <button class="menu-item" data-menu="view">View</button>
+    <div class="menu-dropdown hidden" id="menu-view">
+      <button class="menu-dropdown-item" id="menu-toggle-sidebar">
+        <span>Toggle Sidebar</span>
+        <span class="menu-shortcut">Ctrl+B</span>
+      </button>
+      <button class="menu-dropdown-item" id="menu-toggle-output">
+        <span>Toggle Output Panel</span>
+        <span class="menu-shortcut">Ctrl+J</span>
+      </button>
+      <div class="menu-divider"></div>
+      <a href="https://www.instagram.com/p/DNNzlV3Our4/?img_index=1" target="_blank" rel="noopener" class="menu-dropdown-item">
+        <span>Touch Grass</span>
+        <span class="menu-shortcut">🌿</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Navigate -->
+  <div class="menu-wrapper">
+    <button class="menu-item" data-menu="navigate">Navigate</button>
+    <div class="menu-dropdown hidden" id="menu-navigate">
+      <a href="/about" class="menu-dropdown-item">
+        <span>Go to Definition</span>
+        <span class="menu-shortcut">Ctrl+Click</span>
+      </a>
+      <button class="menu-dropdown-item" id="menu-back">
+        <span>Back to WHERE I was</span>
+        <span class="menu-shortcut">Alt+←</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Code -->
+  <div class="menu-wrapper">
+    <button class="menu-item" data-menu="code">Code</button>
+    <div class="menu-dropdown hidden" id="menu-code">
+      <button class="menu-dropdown-item" id="menu-run">
+        <span>Run</span>
+        <span class="menu-shortcut">Ctrl+Enter</span>
+      </button>
+      <a href="/blog/system-of-systems" class="menu-dropdown-item">
+        <span>Explain Query</span>
+        <span class="menu-shortcut">Ctrl+?</span>
+      </a>
+      <div class="menu-divider"></div>
+      <span class="menu-dropdown-item disabled" title="If only it were that easy">
+        <span>Format Life Choices</span>
+        <span class="menu-shortcut">Ctrl+Alt+L</span>
+      </span>
+    </div>
+  </div>
+
+  <!-- Tools -->
+  <div class="menu-wrapper">
+    <button class="menu-item" data-menu="tools">Tools</button>
+    <div class="menu-dropdown hidden" id="menu-tools">
+      <a href="/links" class="menu-dropdown-item">
+        <span>Database Connections</span>
+      </a>
+      <div class="menu-divider"></div>
+      <button class="menu-dropdown-item" id="menu-terminal">
+        <span>Terminal</span>
+        <span class="menu-shortcut">Alt+F12</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Window -->
+  <div class="menu-wrapper">
+    <button class="menu-item" data-menu="window">Window</button>
+    <div class="menu-dropdown hidden" id="menu-window">
+      <button class="menu-dropdown-item" id="menu-close-tabs">
+        <span>Close All Tabs</span>
+        <span class="menu-shortcut">Ctrl+Shift+W</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Help -->
+  <div class="menu-wrapper">
+    <button class="menu-item" data-menu="help">Help</button>
+    <div class="menu-dropdown hidden" id="menu-help">
+      <a href="/blog" class="menu-dropdown-item">
+        <span>Documentation</span>
+        <span class="menu-shortcut">F1</span>
+      </a>
+      <a href="/contact" class="menu-dropdown-item">
+        <span>Report a Bug</span>
+      </a>
+      <div class="menu-divider"></div>
+      <a href="/blog/about-aaronos" class="menu-dropdown-item">
+        <span>About AaronOS.ai</span>
+      </a>
+    </div>
+  </div>
 </div>
+
+<!-- Exit Modal -->
+<div id="exit-modal" class="modal-overlay hidden">
+  <div class="modal-content">
+    <h3>Exit AaronOS.ai?</h3>
+    <p>Are you sure you want to leave?</p>
+    <p class="text-sm text-[var(--color-text-muted)] mt-2">(Aaron's feelings may be slightly hurt)</p>
+    <div class="modal-buttons">
+      <button id="exit-cancel" class="modal-btn">Cancel</button>
+      <button id="exit-confirm" class="modal-btn primary">Exit Anyway</button>
+    </div>
+  </div>
+</div>
+
+<!-- Search Modal -->
+<div id="search-modal" class="modal-overlay hidden">
+  <div class="modal-content search-modal">
+    <div class="search-header">
+      <svg class="w-5 h-5 text-[var(--color-text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+      <input type="text" id="search-input" placeholder="Search AaronOS.ai..." autocomplete="off" />
+      <kbd>ESC</kbd>
+    </div>
+    <div id="search-results" class="search-results"></div>
+  </div>
+</div>
+
+<!-- Preferences Modal -->
+<div id="preferences-modal" class="modal-overlay hidden">
+  <div class="modal-content preferences-modal">
+    <h3>Preferences</h3>
+    <div class="preference-group">
+      <label class="preference-label">
+        <span>Theme</span>
+        <select id="pref-theme">
+          <option value="dark">Dark (Darcula)</option>
+          <option value="light">Light (IntelliJ)</option>
+        </select>
+      </label>
+    </div>
+    <div class="preference-group">
+      <label class="preference-label">
+        <span>Show Sidebar</span>
+        <input type="checkbox" id="pref-sidebar" checked />
+      </label>
+    </div>
+    <div class="preference-group">
+      <label class="preference-label">
+        <span>Show Output Panel</span>
+        <input type="checkbox" id="pref-output" checked />
+      </label>
+    </div>
+    <div class="preference-group">
+      <label class="preference-label">
+        <span>Show Structure Panel</span>
+        <input type="checkbox" id="pref-structure" checked />
+      </label>
+    </div>
+    <div class="modal-buttons">
+      <button id="pref-close" class="modal-btn primary">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- Terminal Modal -->
+<div id="terminal-modal" class="modal-overlay hidden">
+  <div class="modal-content terminal-modal">
+    <div class="terminal-header">
+      <span>Terminal - aaron@aaronos.ai</span>
+      <button id="terminal-close" class="terminal-close">×</button>
+    </div>
+    <div class="terminal-body" id="terminal-body">
+      <div class="terminal-line">Welcome to AaronOS.ai Terminal v1.0.0</div>
+      <div class="terminal-line">Type 'help' for available commands.</div>
+      <div class="terminal-line">&nbsp;</div>
+    </div>
+    <div class="terminal-input-line">
+      <span class="terminal-prompt">aaron@aaronos.ai:~$</span>
+      <input type="text" id="terminal-input" class="terminal-input" autocomplete="off" spellcheck="false" />
+    </div>
+  </div>
+</div>
+
+<style>
+  .menu-wrapper {
+    position: relative;
+  }
+
+  .menu-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 220px;
+    background: var(--color-bg-panel);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 100;
+    padding: 4px 0;
+  }
+
+  .menu-dropdown-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 16px;
+    color: var(--color-text);
+    font-size: 13px;
+    cursor: pointer;
+    text-decoration: none;
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+  }
+
+  .menu-dropdown-item:hover:not(.disabled) {
+    background: var(--color-bg-active);
+    color: var(--color-text-bright);
+  }
+
+  .menu-dropdown-item.disabled {
+    color: var(--color-text-muted);
+    cursor: not-allowed;
+  }
+
+  .menu-shortcut {
+    color: var(--color-text-muted);
+    font-size: 12px;
+  }
+
+  .menu-divider {
+    height: 1px;
+    background: var(--color-border);
+    margin: 4px 0;
+  }
+
+  .has-submenu {
+    position: relative;
+  }
+
+  .menu-submenu {
+    position: absolute;
+    left: 100%;
+    top: 0;
+    min-width: 200px;
+    background: var(--color-bg-panel);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    padding: 4px 0;
+  }
+
+  .menu-arrow {
+    font-size: 10px;
+  }
+
+  /* Modal styles */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+  }
+
+  .modal-content {
+    background: var(--color-bg-panel);
+    border: 1px solid var(--color-border);
+    padding: 24px;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  }
+
+  .modal-content h3 {
+    margin: 0 0 12px;
+    font-size: 16px;
+    color: var(--color-text-bright);
+  }
+
+  .modal-content p {
+    margin: 0;
+    color: var(--color-text);
+  }
+
+  .modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 20px;
+  }
+
+  .modal-btn {
+    padding: 6px 16px;
+    font-size: 13px;
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-alt);
+    color: var(--color-text);
+    cursor: pointer;
+  }
+
+  .modal-btn:hover {
+    background: var(--color-bg-hover);
+  }
+
+  .modal-btn.primary {
+    background: var(--color-bg-active);
+    border-color: var(--color-bg-active);
+    color: var(--color-text-bright);
+  }
+
+  /* Search Modal */
+  .search-modal {
+    max-width: 600px;
+    padding: 0;
+  }
+
+  .search-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .search-header input {
+    flex: 1;
+    background: none;
+    border: none;
+    color: var(--color-text);
+    font-size: 16px;
+    outline: none;
+  }
+
+  .search-header kbd {
+    padding: 2px 6px;
+    background: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+    border-radius: 3px;
+    font-size: 11px;
+    color: var(--color-text-muted);
+  }
+
+  .search-results {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  .search-result {
+    display: block;
+    padding: 12px 16px;
+    color: var(--color-text);
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .search-result:hover {
+    background: var(--color-bg-hover);
+  }
+
+  .search-result-title {
+    font-weight: 500;
+    color: var(--color-text-bright);
+  }
+
+  .search-result-type {
+    font-size: 11px;
+    color: var(--color-keyword);
+    margin-left: 8px;
+  }
+
+  .search-result-desc {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    margin-top: 4px;
+  }
+
+  .search-empty {
+    padding: 24px 16px;
+    text-align: center;
+    color: var(--color-text-muted);
+  }
+
+  /* Preferences Modal */
+  .preferences-modal {
+    max-width: 350px;
+  }
+
+  .preference-group {
+    margin: 16px 0;
+  }
+
+  .preference-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--color-text);
+  }
+
+  .preference-label select,
+  .preference-label input[type="checkbox"] {
+    accent-color: var(--color-accent);
+  }
+
+  .preference-label select {
+    background: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    padding: 4px 8px;
+  }
+
+  /* Terminal Modal */
+  .terminal-modal {
+    max-width: 700px;
+    width: 95%;
+    padding: 0;
+    font-family: var(--font-mono);
+  }
+
+  .terminal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: var(--color-bg-alt);
+    border-bottom: 1px solid var(--color-border);
+    font-size: 12px;
+    color: var(--color-text-muted);
+  }
+
+  .terminal-close {
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    font-size: 18px;
+    cursor: pointer;
+    padding: 0 4px;
+  }
+
+  .terminal-close:hover {
+    color: var(--color-text);
+  }
+
+  .terminal-body {
+    padding: 12px;
+    height: 300px;
+    overflow-y: auto;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .terminal-line {
+    color: var(--color-text);
+  }
+
+  .terminal-line.error {
+    color: #f44747;
+  }
+
+  .terminal-line.success {
+    color: var(--color-string);
+  }
+
+  .terminal-input-line {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    border-top: 1px solid var(--color-border);
+    background: var(--color-bg-alt);
+  }
+
+  .terminal-prompt {
+    color: var(--color-string);
+    margin-right: 8px;
+    font-size: 13px;
+  }
+
+  .terminal-input {
+    flex: 1;
+    background: none;
+    border: none;
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    outline: none;
+  }
+</style>
+
+<script>
+  // Menu bar functionality
+  let activeMenu: string | null = null;
+
+  function initMenuBar() {
+    const menuBar = document.getElementById('menu-bar');
+    if (!menuBar) return;
+
+    // Close menus when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!menuBar.contains(e.target as Node)) {
+        closeAllMenus();
+      }
+    });
+
+    // Menu item clicks
+    menuBar.querySelectorAll('[data-menu]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const menuId = (btn as HTMLElement).dataset.menu;
+        toggleMenu(menuId!);
+      });
+
+      btn.addEventListener('mouseenter', () => {
+        if (activeMenu) {
+          const menuId = (btn as HTMLElement).dataset.menu;
+          toggleMenu(menuId!);
+        }
+      });
+    });
+
+    // Submenu hover
+    menuBar.querySelectorAll('.has-submenu').forEach(item => {
+      item.addEventListener('mouseenter', () => {
+        const submenuId = (item as HTMLElement).dataset.submenu;
+        const submenu = document.getElementById(`submenu-${submenuId}`);
+        submenu?.classList.remove('hidden');
+      });
+
+      item.addEventListener('mouseleave', () => {
+        const submenuId = (item as HTMLElement).dataset.submenu;
+        const submenu = document.getElementById(`submenu-${submenuId}`);
+        submenu?.classList.add('hidden');
+      });
+    });
+
+    // Menu actions
+    setupMenuActions();
+  }
+
+  function toggleMenu(menuId: string) {
+    const menu = document.getElementById(`menu-${menuId}`);
+    if (!menu) return;
+
+    if (activeMenu === menuId) {
+      closeAllMenus();
+    } else {
+      closeAllMenus();
+      menu.classList.remove('hidden');
+      activeMenu = menuId;
+    }
+  }
+
+  function closeAllMenus() {
+    document.querySelectorAll('.menu-dropdown').forEach(m => m.classList.add('hidden'));
+    activeMenu = null;
+  }
+
+  function setupMenuActions() {
+    // Exit
+    document.getElementById('menu-exit')?.addEventListener('click', () => {
+      closeAllMenus();
+      document.getElementById('exit-modal')?.classList.remove('hidden');
+    });
+
+    document.getElementById('exit-cancel')?.addEventListener('click', () => {
+      document.getElementById('exit-modal')?.classList.add('hidden');
+    });
+
+    document.getElementById('exit-confirm')?.addEventListener('click', () => {
+      window.location.href = 'https://www.google.com/search?q=how+to+hire+talented+data+analysts';
+    });
+
+    // Find/Search
+    document.getElementById('menu-find')?.addEventListener('click', () => {
+      closeAllMenus();
+      openSearch();
+    });
+
+    // Preferences
+    document.getElementById('menu-preferences')?.addEventListener('click', () => {
+      closeAllMenus();
+      openPreferences();
+    });
+
+    document.getElementById('pref-close')?.addEventListener('click', () => {
+      document.getElementById('preferences-modal')?.classList.add('hidden');
+    });
+
+    // View toggles
+    document.getElementById('menu-toggle-sidebar')?.addEventListener('click', () => {
+      closeAllMenus();
+      toggleSidebar();
+    });
+
+    document.getElementById('menu-toggle-output')?.addEventListener('click', () => {
+      closeAllMenus();
+      toggleOutput();
+    });
+
+    // Navigate back
+    document.getElementById('menu-back')?.addEventListener('click', () => {
+      closeAllMenus();
+      history.back();
+    });
+
+    // Run (easter egg)
+    document.getElementById('menu-run')?.addEventListener('click', () => {
+      closeAllMenus();
+      console.log('%cHello, recruiters! 👋', 'font-size: 24px; font-weight: bold; color: #4fc3f7;');
+      console.log('%cLooking for a data analyst who builds their own IDE-themed portfolio? You found one.', 'font-size: 14px; color: #6a8759;');
+      console.log('%cContact: Check the "New Query" option in the File menu.', 'font-size: 12px; color: #808080;');
+      alert('Check your browser console (F12 → Console) for a message! 👀');
+    });
+
+    // Terminal
+    document.getElementById('menu-terminal')?.addEventListener('click', () => {
+      closeAllMenus();
+      openTerminal();
+    });
+
+    document.getElementById('terminal-close')?.addEventListener('click', () => {
+      document.getElementById('terminal-modal')?.classList.add('hidden');
+    });
+
+    // Close All Tabs
+    document.getElementById('menu-close-tabs')?.addEventListener('click', () => {
+      closeAllMenus();
+      alert("Nice try. I know you have 47 tabs open. 🙄");
+    });
+
+    // Close modals on overlay click
+    document.querySelectorAll('.modal-overlay').forEach(modal => {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.classList.add('hidden');
+        }
+      });
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      // Escape closes modals
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay').forEach(m => m.classList.add('hidden'));
+        closeAllMenus();
+      }
+
+      // Ctrl+F for search
+      if (e.ctrlKey && e.key === 'f') {
+        e.preventDefault();
+        openSearch();
+      }
+
+      // Ctrl+B toggle sidebar
+      if (e.ctrlKey && e.key === 'b') {
+        e.preventDefault();
+        toggleSidebar();
+      }
+
+      // Ctrl+J toggle output
+      if (e.ctrlKey && e.key === 'j') {
+        e.preventDefault();
+        toggleOutput();
+      }
+    });
+
+    // Preference controls
+    setupPreferences();
+  }
+
+  // Search functionality
+  const searchData = [
+    { title: 'Home', type: 'page', url: '/', desc: 'Main landing page' },
+    { title: 'Blog', type: 'page', url: '/blog', desc: 'Technical writing and thoughts' },
+    { title: 'Projects', type: 'page', url: '/projects', desc: 'Things I\'ve built' },
+    { title: 'Links', type: 'page', url: '/links', desc: 'Curated links' },
+    { title: 'Contact', type: 'page', url: '/contact', desc: 'Get in touch' },
+    { title: 'About', type: 'page', url: '/about', desc: 'About Aaron' },
+  ];
+
+  function openSearch() {
+    const modal = document.getElementById('search-modal');
+    const input = document.getElementById('search-input') as HTMLInputElement;
+    modal?.classList.remove('hidden');
+    input?.focus();
+    renderSearchResults('');
+
+    input?.addEventListener('input', (e) => {
+      renderSearchResults((e.target as HTMLInputElement).value);
+    });
+  }
+
+  function renderSearchResults(query: string) {
+    const results = document.getElementById('search-results');
+    if (!results) return;
+
+    const q = query.toLowerCase().trim();
+
+    if (!q) {
+      results.innerHTML = '<div class="search-empty">Start typing to search...</div>';
+      return;
+    }
+
+    const filtered = searchData.filter(item =>
+      item.title.toLowerCase().includes(q) ||
+      item.desc.toLowerCase().includes(q)
+    );
+
+    if (filtered.length === 0) {
+      results.innerHTML = '<div class="search-empty">No results found</div>';
+      return;
+    }
+
+    results.innerHTML = filtered.map(item => `
+      <a href="${item.url}" class="search-result">
+        <div>
+          <span class="search-result-title">${item.title}</span>
+          <span class="search-result-type">${item.type}</span>
+        </div>
+        <div class="search-result-desc">${item.desc}</div>
+      </a>
+    `).join('');
+  }
+
+  // Preferences
+  function openPreferences() {
+    const modal = document.getElementById('preferences-modal');
+    modal?.classList.remove('hidden');
+
+    // Set current values
+    const theme = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+    (document.getElementById('pref-theme') as HTMLSelectElement).value = theme;
+
+    const sidebar = localStorage.getItem('show-sidebar') !== 'false';
+    const output = localStorage.getItem('show-output') !== 'false';
+    const structure = localStorage.getItem('show-structure') !== 'false';
+
+    (document.getElementById('pref-sidebar') as HTMLInputElement).checked = sidebar;
+    (document.getElementById('pref-output') as HTMLInputElement).checked = output;
+    (document.getElementById('pref-structure') as HTMLInputElement).checked = structure;
+  }
+
+  function setupPreferences() {
+    document.getElementById('pref-theme')?.addEventListener('change', (e) => {
+      const theme = (e.target as HTMLSelectElement).value;
+      if (theme === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+      } else {
+        document.documentElement.removeAttribute('data-theme');
+      }
+      localStorage.setItem('theme', theme);
+    });
+
+    document.getElementById('pref-sidebar')?.addEventListener('change', (e) => {
+      const show = (e.target as HTMLInputElement).checked;
+      localStorage.setItem('show-sidebar', String(show));
+      applySidebar(show);
+    });
+
+    document.getElementById('pref-output')?.addEventListener('change', (e) => {
+      const show = (e.target as HTMLInputElement).checked;
+      localStorage.setItem('show-output', String(show));
+      applyOutput(show);
+    });
+
+    document.getElementById('pref-structure')?.addEventListener('change', (e) => {
+      const show = (e.target as HTMLInputElement).checked;
+      localStorage.setItem('show-structure', String(show));
+      applyStructure(show);
+    });
+
+    // Apply saved preferences on load
+    applySidebar(localStorage.getItem('show-sidebar') !== 'false');
+    applyOutput(localStorage.getItem('show-output') !== 'false');
+    applyStructure(localStorage.getItem('show-structure') !== 'false');
+  }
+
+  function toggleSidebar() {
+    const current = localStorage.getItem('show-sidebar') !== 'false';
+    localStorage.setItem('show-sidebar', String(!current));
+    applySidebar(!current);
+  }
+
+  function toggleOutput() {
+    const current = localStorage.getItem('show-output') !== 'false';
+    localStorage.setItem('show-output', String(!current));
+    applyOutput(!current);
+  }
+
+  function applySidebar(show: boolean) {
+    const sidebar = document.querySelector('.ide-grid > div:first-child') as HTMLElement;
+    const grid = document.querySelector('.ide-grid') as HTMLElement;
+    if (sidebar && grid) {
+      sidebar.style.display = show ? '' : 'none';
+      grid.style.gridTemplateColumns = show ? '240px 1fr' : '1fr';
+    }
+  }
+
+  function applyOutput(show: boolean) {
+    const output = document.querySelector('.ide-grid [class*="h-\\[150px\\]"]') as HTMLElement;
+    if (output) {
+      output.style.display = show ? '' : 'none';
+    }
+  }
+
+  function applyStructure(show: boolean) {
+    const structure = document.querySelector('.ide-grid [class*="w-\\[200px\\]"]') as HTMLElement;
+    if (structure) {
+      structure.style.display = show ? '' : 'none';
+    }
+  }
+
+  // Terminal
+  function openTerminal() {
+    const modal = document.getElementById('terminal-modal');
+    const input = document.getElementById('terminal-input') as HTMLInputElement;
+    modal?.classList.remove('hidden');
+    input?.focus();
+
+    input?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const cmd = input.value.trim();
+        processCommand(cmd);
+        input.value = '';
+      }
+    });
+  }
+
+  function processCommand(cmd: string) {
+    const body = document.getElementById('terminal-body');
+    if (!body) return;
+
+    // Add command to history
+    body.innerHTML += `<div class="terminal-line"><span style="color: var(--color-string)">aaron@aaronos.ai:~$</span> ${cmd}</div>`;
+
+    const lower = cmd.toLowerCase();
+    let output = '';
+
+    if (!cmd) {
+      // Empty command
+    } else if (lower === 'help') {
+      output = `Available commands:
+  help     - Show this help message
+  about    - About Aaron
+  skills   - List technical skills
+  contact  - Contact information
+  projects - List projects
+  blog     - Go to blog
+  clear    - Clear terminal
+  exit     - Close terminal
+  sudo rm -rf / - Don't even think about it`;
+    } else if (lower === 'about') {
+      output = `<span class="success">Aaron Oswald</span>
+Systems thinker who specializes in data.
+Based in Washington, D.C.
+Currently a Pr. Data Analyst at Capital One.`;
+    } else if (lower === 'skills') {
+      output = `Technical Skills:
+  • SQL (expert) - Writing queries since before it was cool
+  • Python - Pandas, NumPy, and too many notebooks
+  • Data Visualization - Tableau, D3.js, Observable
+  • Cloud - AWS, GCP basics
+  • This website - Astro, TypeScript, Tailwind`;
+    } else if (lower === 'contact') {
+      output = `Contact:
+  • Twitter: @AaronPublicTwit
+  • LinkedIn: /in/aaronoswald
+  • GitHub: /redoswald
+  • Or use File → New Query`;
+    } else if (lower === 'projects') {
+      output = `Projects:
+  • Climate Comparer - Interactive Tableau viz
+  • AI Music Experiments - ML + music
+  • PRM Tracker - Relationship management tool
+
+Type 'blog' to see more.`;
+    } else if (lower === 'blog') {
+      window.location.href = '/blog';
+      return;
+    } else if (lower === 'clear') {
+      body.innerHTML = '';
+      return;
+    } else if (lower === 'exit') {
+      document.getElementById('terminal-modal')?.classList.add('hidden');
+      return;
+    } else if (lower.startsWith('sudo')) {
+      output = `<span class="error">Nice try. You don't have sudo privileges here.</span>`;
+    } else if (lower === 'ls') {
+      output = `blog/  projects/  links/  about.mdx  contact.mdx  resume.pdf`;
+    } else if (lower === 'pwd') {
+      output = `/home/aaron/aaronos.ai`;
+    } else if (lower === 'whoami') {
+      output = `A curious visitor to AaronOS.ai`;
+    } else if (lower === 'date') {
+      output = new Date().toString();
+    } else if (lower.startsWith('cd ')) {
+      output = `<span class="error">This is a website, not a real filesystem. But I appreciate the effort.</span>`;
+    } else if (lower.startsWith('cat ')) {
+      output = `<span class="error">File contents are classified. Try navigating the site instead.</span>`;
+    } else {
+      output = `<span class="error">Command not found: ${cmd}</span>
+Type 'help' for available commands.`;
+    }
+
+    if (output) {
+      body.innerHTML += `<div class="terminal-line" style="white-space: pre-wrap">${output}</div>`;
+    }
+
+    body.innerHTML += `<div class="terminal-line">&nbsp;</div>`;
+    body.scrollTop = body.scrollHeight;
+  }
+
+  // Initialize
+  initMenuBar();
+  document.addEventListener('astro:page-load', initMenuBar);
+</script>

@@ -1,0 +1,90 @@
+---
+import IDELayout from '../layouts/IDELayout.astro';
+
+const headings = [
+  { depth: 1, slug: 'new-query', text: 'New Query' },
+  { depth: 2, slug: 'channels', text: 'Communication Channels' },
+  { depth: 2, slug: 'response-time', text: 'Expected Response Time' },
+];
+---
+
+<IDELayout title="Contact" description="Get in touch with Aaron" currentPath="/contact" headings={headings}>
+  <section>
+    <h1 id="new-query" class="!mt-0">
+      <span class="text-[var(--color-comment)]">-- </span>New Query
+    </h1>
+    <p class="text-[var(--color-text-muted)] mb-8">
+      Ready to execute a connection request? Choose your preferred protocol below.
+    </p>
+
+    <pre class="!mt-0 !mb-8"><code><span class="text-[var(--color-keyword)]">INSERT INTO</span> conversations (sender, message, timestamp)
+<span class="text-[var(--color-keyword)]">VALUES</span> (<span class="text-[var(--color-string)]">'you'</span>, <span class="text-[var(--color-string)]">'your_message_here'</span>, <span class="text-[var(--color-function)]">NOW()</span>);</code></pre>
+
+    <h2 id="channels">Communication Channels</h2>
+
+    <div class="space-y-4">
+      <a
+        href="mailto:contact@aaronos.ai"
+        class="block p-4 border border-[var(--color-border)] hover:border-[var(--color-accent)] hover:bg-[var(--color-bg-hover)] transition-colors"
+      >
+        <div class="flex items-center gap-3">
+          <span class="text-[var(--color-accent)]">@</span>
+          <div>
+            <div class="font-medium text-[var(--color-text-bright)]">Email</div>
+            <div class="text-sm text-[var(--color-text-muted)]">contact@aaronos.ai</div>
+          </div>
+        </div>
+      </a>
+
+      <a
+        href="https://linkedin.com/in/aaronoswald"
+        target="_blank"
+        rel="noopener"
+        class="block p-4 border border-[var(--color-border)] hover:border-[var(--color-accent)] hover:bg-[var(--color-bg-hover)] transition-colors"
+      >
+        <div class="flex items-center gap-3">
+          <span class="text-[var(--color-accent)]">in</span>
+          <div>
+            <div class="font-medium text-[var(--color-text-bright)]">LinkedIn</div>
+            <div class="text-sm text-[var(--color-text-muted)]">/in/aaronoswald</div>
+          </div>
+        </div>
+      </a>
+
+      <a
+        href="https://twitter.com/AaronPublicTwit"
+        target="_blank"
+        rel="noopener"
+        class="block p-4 border border-[var(--color-border)] hover:border-[var(--color-accent)] hover:bg-[var(--color-bg-hover)] transition-colors"
+      >
+        <div class="flex items-center gap-3">
+          <span class="text-[var(--color-accent)]">𝕏</span>
+          <div>
+            <div class="font-medium text-[var(--color-text-bright)]">Twitter</div>
+            <div class="text-sm text-[var(--color-text-muted)]">@AaronPublicTwit</div>
+          </div>
+        </div>
+      </a>
+
+      <a
+        href="https://github.com/redoswald"
+        target="_blank"
+        rel="noopener"
+        class="block p-4 border border-[var(--color-border)] hover:border-[var(--color-accent)] hover:bg-[var(--color-bg-hover)] transition-colors"
+      >
+        <div class="flex items-center gap-3">
+          <span class="text-[var(--color-accent)]">gh</span>
+          <div>
+            <div class="font-medium text-[var(--color-text-bright)]">GitHub</div>
+            <div class="text-sm text-[var(--color-text-muted)]">/redoswald</div>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <h2 id="response-time">Expected Response Time</h2>
+    <pre><code><span class="text-[var(--color-keyword)]">SELECT</span> AVG(response_time) <span class="text-[var(--color-keyword)]">FROM</span> messages;
+<span class="text-[var(--color-comment)]">-- Result: Usually within 24-48 hours</span>
+<span class="text-[var(--color-comment)]">-- Faster for interesting opportunities or cool projects</span></code></pre>
+  </section>
+</IDELayout>
