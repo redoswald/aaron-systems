@@ -38,9 +38,12 @@ const structureHeadings = headings.map(h => ({
       {post.data.tags && post.data.tags.length > 0 && (
         <div class="flex gap-2 mt-3">
           {post.data.tags.map((tag: string) => (
-            <span class="text-xs bg-[var(--color-bg-alt)] text-[var(--color-keyword)] px-2 py-1">
+            <a
+              href={`/blog/tag/${tag}`}
+              class="text-xs bg-[var(--color-bg-alt)] text-[var(--color-keyword)] px-2 py-1 hover:bg-[var(--color-bg-hover)] transition-colors"
+            >
               {tag}
-            </span>
+            </a>
           ))}
         </div>
       )}
