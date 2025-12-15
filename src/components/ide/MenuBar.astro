@@ -329,6 +329,10 @@ const recentPosts = (await getCollection('blog', ({ data }) => !data.draft))
     z-index: 200;
   }
 
+  .modal-overlay.hidden {
+    display: none !important;
+  }
+
   .modal-content {
     background: var(--color-bg-panel);
     border: 1px solid var(--color-border);
@@ -743,6 +747,8 @@ const recentPosts = (await getCollection('blog', ({ data }) => !data.draft))
     { title: 'About', type: 'page', url: '/about', desc: 'About Aaron' },
   ];
 
+  let searchInitialized = false;
+
   function openSearch() {
     const modal = document.getElementById('search-modal');
     const input = document.getElementById('search-input') as HTMLInputElement;
@@ -750,9 +756,13 @@ const recentPosts = (await getCollection('blog', ({ data }) => !data.draft))
     input?.focus();
     renderSearchResults('');
 
-    input?.addEventListener('input', (e) => {
-      renderSearchResults((e.target as HTMLInputElement).value);
-    });
+    // Only add listener once
+    if (!searchInitialized && input) {
+      input.addEventListener('input', (e) => {
+        renderSearchResults((e.target as HTMLInputElement).value);
+      });
+      searchInitialized = true;
+    }
   }
 
   function renderSearchResults(query: string) {
@@ -876,19 +886,25 @@ const recentPosts = (await getCollection('blog', ({ data }) => !data.draft))
   }
 
   // Terminal
+  let terminalInitialized = false;
+
   function openTerminal() {
     const modal = document.getElementById('terminal-modal');
     const input = document.getElementById('terminal-input') as HTMLInputElement;
     modal?.classList.remove('hidden');
     input?.focus();
 
-    input?.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        const cmd = input.value.trim();
-        processCommand(cmd);
-        input.value = '';
-      }
-    });
+    // Only add listener once
+    if (!terminalInitialized && input) {
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          const cmd = input.value.trim();
+          processCommand(cmd);
+          input.value = '';
+        }
+      });
+      terminalInitialized = true;
+    }
   }
 
   function processCommand(cmd: string) {
@@ -976,6 +992,14 @@ Type 'help' for available commands.`;
   }
 
   // Initialize
-  initMenuBar();
-  document.addEventListener('astro:page-load', initMenuBar);
+  function fullInit() {
+    // Reset initialization flags on page navigation
+    searchInitialized = false;
+    terminalInitialized = false;
+    activeMenu = null;
+    initMenuBar();
+  }
+
+  fullInit();
+  document.addEventListener('astro:page-load', fullInit);
 </script>
