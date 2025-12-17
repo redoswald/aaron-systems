@@ -1,5 +1,6 @@
 ---
 import IDELayout from '../layouts/IDELayout.astro';
+import InlineQuery from '../components/InlineQuery.astro';
 import { getCollection } from 'astro:content';
 
 const allPosts = await getCollection('blog', ({ data }) => !data.draft);
@@ -29,12 +30,16 @@ const headings = [
     <p>
       Based in Washington, D.C.
       </p>
-    <p> Currently a <b>Pr. Data Analyst at Capital One</b>. When I'm not 
+    <p> Currently a <b>Pr. Data Analyst at Capital One</b>. When I'm not
     analyzing data, I write about data systems,
       visualization, and the occasional experiment at the intersection of
       technology and creativity.
     </p>
   </section>
+
+  <div class="my-6">
+    <InlineQuery placeholder="* FROM blog" />
+  </div>
 
   {recentPosts.length > 0 && (
     <section class="mb-12">
@@ -52,8 +57,8 @@ const headings = [
           </li>
         ))}
       </ul>
-      <a href="/blog" class="inline-block mt-4 text-sm text-[var(--color-accent)]">
-        SELECT * FROM blog &rarr;
+      <a href="/blog" class="inline-block mt-4 text-sm text-[var(--color-accent)] hover:underline">
+        View all posts &rarr;
       </a>
     </section>
   )}
@@ -73,8 +78,8 @@ const headings = [
           </li>
         ))}
       </ul>
-      <a href="/projects" class="inline-block mt-4 text-sm text-[var(--color-accent)]">
-        SELECT * FROM projects &rarr;
+      <a href="/projects" class="inline-block mt-4 text-sm text-[var(--color-accent)] hover:underline">
+        View all projects &rarr;
       </a>
     </section>
   )}

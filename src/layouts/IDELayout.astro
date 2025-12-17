@@ -52,17 +52,22 @@ const {
     <div class="hidden md:flex md:flex-col h-full">
       <MenuBar />
 
-      <div class="flex-1 grid ide-grid overflow-hidden">
+      <div class="flex-1 flex overflow-hidden">
         <!-- Left sidebar: Explorer + Connections -->
-        <div class="flex flex-col border-r border-[var(--color-border)] overflow-hidden">
+        <div id="sidebar" class="flex flex-col border-r border-[var(--color-border)] overflow-hidden" style="width: 240px;">
           <Explorer currentPath={currentPath} />
           <ConnectionsPanel />
         </div>
 
+        <!-- Sidebar Resize Handle -->
+        <div id="sidebar-resize" class="sidebar-resize-handle" title="Drag to resize">
+          <div class="sidebar-handle-line"></div>
+        </div>
+
         <!-- Main area: Tabs + Editor + Output -->
-        <div class="flex flex-col overflow-hidden">
+        <div class="flex-1 flex flex-col overflow-hidden min-w-0" id="main-area">
           <!-- Top: Tabs + Editor + Structure -->
-          <div class="flex-1 flex overflow-hidden">
+          <div class="flex-1 flex overflow-hidden min-h-0" id="editor-area">
             <div class="flex-1 flex flex-col overflow-hidden">
               <EditorTabs title={title} currentPath={currentPath} />
               <div class="flex-1 overflow-auto editor-content">
@@ -74,8 +79,17 @@ const {
             <StructurePanel headings={headings} />
           </div>
 
+          <!-- Resize Handle -->
+          <div id="resize-handle" class="resize-handle" title="Drag to resize">
+            <div class="resize-handle-dots">
+              <span></span><span></span><span></span>
+            </div>
+          </div>
+
           <!-- Bottom: Output -->
-          <OutputPanel data={outputData} />
+          <div id="output-wrapper" style="height: 150px;">
+            <OutputPanel data={outputData} />
+          </div>
         </div>
       </div>
 
@@ -130,10 +144,107 @@ const {
     </div>
 
     <style>
-      .ide-grid {
-        display: grid;
-        grid-template-columns: 240px 1fr;
-        grid-template-rows: 1fr;
+      /* Sidebar resize handle */
+      .sidebar-resize-handle {
+        width: 4px;
+        cursor: col-resize;
+        background: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.15s;
+        flex-shrink: 0;
+        position: relative;
+      }
+
+      .sidebar-resize-handle:hover,
+      .sidebar-resize-handle.dragging {
+        background: var(--color-bg-active);
+      }
+
+      .sidebar-handle-line {
+        width: 2px;
+        height: 30px;
+        background: var(--color-text-muted);
+        border-radius: 1px;
+        opacity: 0;
+        transition: opacity 0.15s;
+      }
+
+      .sidebar-resize-handle:hover .sidebar-handle-line,
+      .sidebar-resize-handle.dragging .sidebar-handle-line {
+        opacity: 0.5;
+      }
+
+      #sidebar {
+        flex-shrink: 0;
+        min-width: 120px;
+        max-width: 50vw;
+      }
+
+      body.resizing-x {
+        cursor: col-resize !important;
+        user-select: none;
+      }
+
+      body.resizing-x * {
+        cursor: col-resize !important;
+      }
+
+      /* Output panel resize handle */
+      .resize-handle {
+        height: 6px;
+        background: var(--color-bg-alt);
+        border-top: 1px solid var(--color-border);
+        cursor: row-resize;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.15s;
+        flex-shrink: 0;
+      }
+
+      .resize-handle:hover,
+      .resize-handle.dragging {
+        background: var(--color-bg-hover);
+      }
+
+      .resize-handle-dots {
+        display: flex;
+        gap: 3px;
+      }
+
+      .resize-handle-dots span {
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background: var(--color-text-muted);
+        opacity: 0.5;
+      }
+
+      .resize-handle:hover .resize-handle-dots span,
+      .resize-handle.dragging .resize-handle-dots span {
+        opacity: 0.8;
+      }
+
+      #output-wrapper {
+        flex-shrink: 0;
+        min-height: 32px;
+        max-height: 80vh;
+        overflow: hidden;
+      }
+
+      #output-wrapper > * {
+        height: 100%;
+      }
+
+      body.resizing {
+        cursor: row-resize !important;
+        user-select: none;
+      }
+
+      body.resizing * {
+        cursor: row-resize !important;
       }
     </style>
 
@@ -169,6 +280,115 @@ const {
         }
         updateMobileIcons();
       });
+
+      // Sidebar resize functionality
+      const sidebarHandle = document.getElementById('sidebar-resize');
+      const sidebar = document.getElementById('sidebar');
+
+      if (sidebarHandle && sidebar) {
+        let isResizingSidebar = false;
+        let startX = 0;
+        let startWidth = 0;
+
+        // Load saved width
+        const savedWidth = localStorage.getItem('sidebar-width');
+        if (savedWidth) {
+          sidebar.style.width = savedWidth + 'px';
+        }
+
+        sidebarHandle.addEventListener('mousedown', (e) => {
+          isResizingSidebar = true;
+          startX = e.clientX;
+          startWidth = sidebar.offsetWidth;
+          document.body.classList.add('resizing-x');
+          sidebarHandle.classList.add('dragging');
+          e.preventDefault();
+        });
+
+        document.addEventListener('mousemove', (e) => {
+          if (!isResizingSidebar) return;
+
+          const deltaX = e.clientX - startX;
+          const newWidth = Math.min(
+            Math.max(startWidth + deltaX, 120), // min width
+            window.innerWidth * 0.5 // max width (50% of viewport)
+          );
+
+          sidebar.style.width = newWidth + 'px';
+        });
+
+        document.addEventListener('mouseup', () => {
+          if (isResizingSidebar) {
+            isResizingSidebar = false;
+            document.body.classList.remove('resizing-x');
+            sidebarHandle.classList.remove('dragging');
+
+            // Save width to localStorage
+            localStorage.setItem('sidebar-width', sidebar.offsetWidth);
+          }
+        });
+
+        // Double-click to reset to default
+        sidebarHandle.addEventListener('dblclick', () => {
+          sidebar.style.width = '240px';
+          localStorage.setItem('sidebar-width', 240);
+        });
+      }
+
+      // Output panel resize functionality
+      const resizeHandle = document.getElementById('resize-handle');
+      const outputWrapper = document.getElementById('output-wrapper');
+      const mainArea = document.getElementById('main-area');
+
+      if (resizeHandle && outputWrapper && mainArea) {
+        let isResizing = false;
+        let startY = 0;
+        let startHeight = 0;
+
+        // Load saved height
+        const savedHeight = localStorage.getItem('output-panel-height');
+        if (savedHeight) {
+          outputWrapper.style.height = savedHeight + 'px';
+        }
+
+        resizeHandle.addEventListener('mousedown', (e) => {
+          isResizing = true;
+          startY = e.clientY;
+          startHeight = outputWrapper.offsetHeight;
+          document.body.classList.add('resizing');
+          resizeHandle.classList.add('dragging');
+          e.preventDefault();
+        });
+
+        document.addEventListener('mousemove', (e) => {
+          if (!isResizing) return;
+
+          const deltaY = startY - e.clientY;
+          const newHeight = Math.min(
+            Math.max(startHeight + deltaY, 32), // min height
+            mainArea.offsetHeight - 100 // max height (leave room for editor)
+          );
+
+          outputWrapper.style.height = newHeight + 'px';
+        });
+
+        document.addEventListener('mouseup', () => {
+          if (isResizing) {
+            isResizing = false;
+            document.body.classList.remove('resizing');
+            resizeHandle.classList.remove('dragging');
+
+            // Save height to localStorage
+            localStorage.setItem('output-panel-height', outputWrapper.offsetHeight);
+          }
+        });
+
+        // Double-click to reset to default
+        resizeHandle.addEventListener('dblclick', () => {
+          outputWrapper.style.height = '150px';
+          localStorage.setItem('output-panel-height', 150);
+        });
+      }
     </script>
   </body>
 </html>

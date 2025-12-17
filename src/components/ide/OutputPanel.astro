@@ -23,61 +23,164 @@ const allContent = [
 ].sort((a, b) => b.date.valueOf() - a.date.valueOf()).slice(0, 5);
 ---
 
-<div class="h-[150px] border-t border-[var(--color-border)] flex flex-col bg-[var(--color-bg-panel)]">
-  <div class="ide-panel-header flex items-center gap-4">
+<div id="output-panel" class="border-t border-[var(--color-border)] flex flex-col bg-[var(--color-bg-panel)] transition-all duration-200" data-collapsed="false">
+  <div class="ide-panel-header flex items-center gap-4 cursor-pointer select-none" id="output-header">
+    <button id="output-toggle" class="p-0.5 hover:bg-[var(--color-bg-hover)] rounded" title="Toggle Output Panel">
+      <svg id="output-chevron" class="w-3 h-3 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </button>
     <span>Output</span>
-    <span class="text-[10px] text-[var(--color-text-muted)]">
-      {data ? 'Custom output' : 'Recent content'}
+    <span id="output-status" class="text-[10px] text-[var(--color-text-muted)]">
+      Recent content
     </span>
+    <span class="ml-auto text-[10px] text-[var(--color-text-muted)]" id="output-hint">Click to collapse</span>
   </div>
 
-  <div class="flex-1 overflow-auto">
-    {data?.type === 'table' && data.columns && data.rows ? (
-      <table class="output-table">
-        <thead>
+  <div class="flex-1 overflow-auto" id="output-content">
+    <!-- Default content -->
+    <table class="output-table" id="default-output">
+      <thead>
+        <tr>
+          <th>id</th>
+          <th>type</th>
+          <th>title</th>
+          <th>date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {allContent.map((item, i) => (
           <tr>
-            {data.columns.map(col => <th>{col}</th>)}
+            <td class="text-[var(--color-number)]">{i + 1}</td>
+            <td class="text-[var(--color-keyword)]">{item.type}</td>
+            <td>
+              <a href={`/${item.type === 'blog' ? 'blog' : 'projects'}/${item.id}`} class="hover:underline">
+                {item.title}
+              </a>
+            </td>
+            <td class="text-[var(--color-text-muted)]">
+              {item.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+            </td>
           </tr>
-        </thead>
-        <tbody>
-          {data.rows.map(row => (
-            <tr>
-              {row.map(cell => <td>{cell}</td>)}
-            </tr>
-          ))}
-        </tbody>
+        ))}
+      </tbody>
+    </table>
+
+    <!-- Query results (initially hidden) -->
+    <div id="query-output" class="hidden">
+      <div id="query-error" class="hidden p-4 text-red-400 font-mono text-sm"></div>
+      <table class="output-table" id="query-table">
+        <thead id="query-head"></thead>
+        <tbody id="query-body"></tbody>
       </table>
-    ) : data?.type === 'code' && data.code ? (
-      <pre class="p-3 text-xs font-mono text-[var(--color-text)]">{data.code}</pre>
-    ) : data?.type === 'custom' && data.html ? (
-      <div class="p-3" set:html={data.html} />
-    ) : (
-      <table class="output-table">
-        <thead>
-          <tr>
-            <th>id</th>
-            <th>type</th>
-            <th>title</th>
-            <th>date</th>
-          </tr>
-        </thead>
-        <tbody>
-          {allContent.map((item, i) => (
-            <tr>
-              <td class="text-[var(--color-number)]">{i + 1}</td>
-              <td class="text-[var(--color-keyword)]">{item.type}</td>
-              <td>
-                <a href={`/${item.type === 'blog' ? 'blog' : 'projects'}/${item.id}`} class="hover:underline">
-                  {item.title}
-                </a>
-              </td>
-              <td class="text-[var(--color-text-muted)]">
-                {item.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    )}
+    </div>
   </div>
 </div>
+
+<style>
+  #output-panel {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  #output-panel[data-collapsed="true"] #output-content {
+    display: none;
+  }
+  #output-panel[data-collapsed="true"] #output-chevron {
+    transform: rotate(-90deg);
+  }
+  #output-content {
+    flex: 1;
+    min-height: 0;
+  }
+</style>
+
+<script>
+  const panel = document.getElementById('output-panel');
+  const header = document.getElementById('output-header');
+  const hint = document.getElementById('output-hint');
+  const status = document.getElementById('output-status');
+  const defaultOutput = document.getElementById('default-output');
+  const queryOutput = document.getElementById('query-output');
+  const queryError = document.getElementById('query-error');
+  const queryTable = document.getElementById('query-table');
+  const queryHead = document.getElementById('query-head');
+  const queryBody = document.getElementById('query-body');
+
+  // Toggle collapse
+  header?.addEventListener('click', () => {
+    const isCollapsed = panel?.dataset.collapsed === 'true';
+    if (panel) panel.dataset.collapsed = isCollapsed ? 'false' : 'true';
+    if (hint) hint.textContent = isCollapsed ? 'Click to collapse' : 'Click to expand';
+  });
+
+  // Listen for query results
+  window.addEventListener('query-result', (e) => {
+    const { query, error, rows, columns, table } = e.detail;
+
+    // Expand panel if collapsed
+    if (panel?.dataset.collapsed === 'true') {
+      panel.dataset.collapsed = 'false';
+      if (hint) hint.textContent = 'Click to collapse';
+    }
+
+    // Hide default, show query output
+    defaultOutput?.classList.add('hidden');
+    queryOutput?.classList.remove('hidden');
+
+    if (error) {
+      queryError?.classList.remove('hidden');
+      queryTable?.classList.add('hidden');
+      if (queryError) queryError.textContent = `Error: ${error}`;
+      if (status) status.textContent = 'Query error';
+      return;
+    }
+
+    queryError?.classList.add('hidden');
+    queryTable?.classList.remove('hidden');
+
+    if (!rows || rows.length === 0) {
+      if (queryBody) queryBody.innerHTML = '<tr><td colspan="100" class="text-[var(--color-text-muted)] p-4 text-center italic">No results</td></tr>';
+      if (queryHead) queryHead.innerHTML = '';
+      if (status) status.textContent = `${query} → 0 rows`;
+      return;
+    }
+
+    // Render header
+    if (queryHead) {
+      queryHead.innerHTML = `<tr>${columns.map(c => `<th>${c}</th>`).join('')}</tr>`;
+    }
+
+    // Render body
+    if (queryBody) {
+      queryBody.innerHTML = rows.map(row => `
+        <tr>
+          ${columns.map(col => {
+            let val = row[col];
+            const url = row._url;
+
+            if (val === null || val === undefined) {
+              val = '<span class="text-[var(--color-text-muted)]">null</span>';
+            } else if (typeof val === 'boolean') {
+              val = `<span class="text-[var(--color-keyword)]">${val}</span>`;
+            } else if (Array.isArray(val)) {
+              val = val.map(v => `<span class="text-[var(--color-string)]">'${v}'</span>`).join(', ');
+            } else if (col === 'date') {
+              val = new Date(val).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+            } else if (col === 'title' && url) {
+              val = `<a href="${url}" class="hover:underline text-[var(--color-accent)]">${val}</a>`;
+            } else if (col === 'id') {
+              val = `<span class="text-[var(--color-number)]">${val}</span>`;
+            }
+
+            return `<td>${val}</td>`;
+          }).join('')}
+        </tr>
+      `).join('');
+    }
+
+    if (status) {
+      status.innerHTML = `<span class="text-[var(--color-string)]">${query}</span> → ${rows.length} row${rows.length !== 1 ? 's' : ''}`;
+    }
+  });
+</script>
