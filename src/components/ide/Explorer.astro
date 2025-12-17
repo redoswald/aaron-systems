@@ -11,12 +11,37 @@ const blogPosts = await getCollection('blog', ({ data }) => !data.draft);
 const projects = await getCollection('projects');
 const links = await getCollection('links');
 
-const sortedBlog = blogPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+// Group blog posts by folder
+const blogByFolder: Record<string, typeof blogPosts> = { _root: [] };
+for (const post of blogPosts) {
+  const parts = post.id.split('/');
+  if (parts.length > 1) {
+    const folder = parts[0];
+    if (!blogByFolder[folder]) blogByFolder[folder] = [];
+    blogByFolder[folder].push(post);
+  } else {
+    blogByFolder._root.push(post);
+  }
+}
+
+// Sort each group by date
+for (const key of Object.keys(blogByFolder)) {
+  blogByFolder[key].sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+}
+
 const sortedProjects = projects.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 const sortedLinks = links.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
+// Get folder names (excluding _root) sorted alphabetically
+const blogFolders = Object.keys(blogByFolder).filter(k => k !== '_root').sort();
+
 function isActive(path: string) {
   return currentPath === path || currentPath.startsWith(path + '/');
+}
+
+function getFileName(id: string) {
+  const parts = id.split('/');
+  return parts[parts.length - 1];
 }
 ---
 
@@ -44,7 +69,8 @@ function isActive(path: string) {
         <span>blog</span>
       </summary>
       <div>
-        {sortedBlog.map(post => (
+        <!-- Root level blog posts -->
+        {blogByFolder._root.map(post => (
           <a
             href={`/blog/${post.id}`}
             class={`tree-item ${isActive(`/blog/${post.id}`) ? 'active' : ''}`}
@@ -55,6 +81,36 @@ function isActive(path: string) {
             </svg>
             <span class="truncate">{post.id}.mdx</span>
           </a>
+        ))}
+
+        <!-- Subfolders -->
+        {blogFolders.map(folder => (
+          <details class="group/sub">
+            <summary class="tree-item" style="padding-left: 40px;">
+              <svg class="tree-chevron group-open/sub:rotate-90" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M6 4l4 4-4 4V4z"/>
+              </svg>
+              <svg class="tree-icon text-[var(--color-keyword)]" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M1 2h5l2 2h7v10H1V2zm1 1v10h12V5H7.5L5.5 3H2z"/>
+              </svg>
+              <span>{folder}</span>
+              <span class="text-[var(--color-text-muted)] text-[10px] ml-1">({blogByFolder[folder].length})</span>
+            </summary>
+            <div>
+              {blogByFolder[folder].map(post => (
+                <a
+                  href={`/blog/${post.id}`}
+                  class={`tree-item ${isActive(`/blog/${post.id}`) ? 'active' : ''}`}
+                  style="padding-left: 72px;"
+                >
+                  <svg class="tree-icon text-[var(--color-string)]" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M3 1h10l2 2v12H1V1h2zm1 1v12h10V4l-1-1H4V2z"/>
+                  </svg>
+                  <span class="truncate">{getFileName(post.id)}.mdx</span>
+                </a>
+              ))}
+            </div>
+          </details>
         ))}
       </div>
     </details>
