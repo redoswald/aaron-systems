@@ -11,6 +11,11 @@ export default defineConfig({
     plugins: [tailwindcss()]
   },
   integrations: [mdx()],
+  markdown: {
+    shikiConfig: {
+      theme: 'github-dark',
+    },
+  },
   redirects: {
     '/blog': '/writing',
     '/blog/[...slug]': '/writing/[...slug]',

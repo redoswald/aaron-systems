@@ -221,18 +221,17 @@ h1, h2, h3, h4, h5, h6 {
 .prose pre {
   font-family: var(--font-mono);
   font-size: 14px;
-  background-color: var(--bg-secondary);
   padding: 16px 20px;
   border-radius: 8px;
-  border: 1px solid var(--border);
   overflow-x: auto;
   margin-bottom: 1.5em;
+  /* Shiki handles background/colors */
 }
 
 .prose pre code {
   background: none;
   padding: 0;
-  color: var(--text-primary);
+  color: inherit;
 }
 
 .prose blockquote {
