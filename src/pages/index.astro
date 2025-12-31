@@ -24,6 +24,7 @@ const recentPosts = allPosts
 // Get featured projects
 const featuredProjects = allProjects
   .filter(p => p.data.featured)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 2);
 
 // Get featured posts (two most recent essays that aren't linkposts)
