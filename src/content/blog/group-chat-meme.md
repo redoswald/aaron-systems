@@ -1,8 +1,9 @@
 ---
 title: "Group Chat Meme"
-author: "Unknown"
-dateRead: 2022-08-05
-tags: ["imported"]
+description: "Why blaming European-drawn borders for developing world conflict is problematic"
+date: 2022-08-05
+draft: true
+tags: ["politics", "history"]
 ---
 
 **tl;dr: To endorse the concept that European borders are to blame for developing world conflict is to endorse problematic concepts of nationalism, to ignore millenia long legacies, and to ultimately delegitimize BIPOC as controllers of their own destiny.&nbsp;**

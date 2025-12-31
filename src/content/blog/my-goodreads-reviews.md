@@ -1,8 +1,9 @@
 ---
 title: "My Goodreads Reviews"
-author: "Unknown"
-dateRead: 2021-02-19
-tags: ["imported"]
+description: "Why I moved my book reviews to a blog and what I hope to achieve with them"
+date: 2021-02-19
+draft: true
+tags: ["meta", "reading"]
 ---
 
 **tl;dr: I've moved my book reviews to a blog because Goodreads is a questionable place. My book reviews are intended to be public recommendations wrapped in thinking out loud. They achieve this afaik**. **I apologize for posting on a blog in 2021**.
