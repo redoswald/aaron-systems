@@ -26,10 +26,11 @@ const featuredProjects = allProjects
   .filter(p => p.data.featured)
   .slice(0, 2);
 
-// Get featured posts (for now, just grab the first essay that's not a linkpost)
-const featuredPost = allPosts
+// Get featured posts (two most recent essays that aren't linkposts)
+const featuredPosts = allPosts
   .filter(p => !p.id.includes('linkpost'))
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())[0];
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 2);
 
 // Helper to get book cover
 function getBookCover(book: typeof books[0]): string {
@@ -97,7 +98,7 @@ const recentLibraryItems = [...bookItems, ...filmItems]
   />
 
   <!-- Featured Section -->
-  {(featuredProjects.length > 0 || featuredPost) && (
+  {(featuredProjects.length > 0 || featuredPosts.length > 0) && (
     <section class="mb-16">
       <h2 class="text-xl mb-6" style="font-family: var(--font-serif);">Featured</h2>
       <div class="grid md:grid-cols-2 gap-4">
@@ -110,16 +111,16 @@ const recentLibraryItems = [...bookItems, ...filmItems]
             href={`/projects/${project.id}`}
           />
         ))}
-        {featuredPost && (
+        {featuredPosts.map(post => (
           <Card
             type="essay"
-            title={featuredPost.data.title}
-            description={featuredPost.data.description}
-            date={featuredPost.data.date}
-            href={`/writing/${featuredPost.id}`}
-            tags={featuredPost.data.tags}
+            title={post.data.title}
+            description={post.data.description}
+            date={post.data.date}
+            href={`/writing/${post.id}`}
+            tags={post.data.tags}
           />
-        )}
+        ))}
       </div>
     </section>
   )}
