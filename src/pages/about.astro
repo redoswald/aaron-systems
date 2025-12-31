@@ -1,43 +1,23 @@
 ---
-import IDELayout from '../layouts/IDELayout.astro';
-
-const headings = [
-  { depth: 1, slug: 'definition', text: 'Aaron Oswald' },
-  { depth: 2, slug: 'current-role', text: 'Current Role' },
-  { depth: 2, slug: 'background', text: 'Background' },
-  { depth: 2, slug: 'approach', text: 'Approach' },
-  { depth: 2, slug: 'outside-work', text: 'Outside Work' },
-];
+import GardenLayout from '../layouts/GardenLayout.astro';
 ---
 
-<IDELayout title="About" description="About Aaron Oswald" currentPath="/about" headings={headings}>
-  <section>
-    <h1 id="definition" class="!mt-0">
-      <span class="text-[var(--color-comment)]">-- Go to Definition: </span>Aaron
-    </h1>
+<GardenLayout title="About" description="About Aaron Oswald">
+  <article class="prose">
+    <header class="mb-12 not-prose">
+      <h1 class="text-3xl md:text-4xl mb-4" style="font-family: var(--font-serif);">
+        About Me
+      </h1>
+    </header>
 
-    <pre class="!mt-4 !mb-8"><code><span class="text-[var(--color-keyword)]">CREATE TYPE</span> person <span class="text-[var(--color-keyword)]">AS</span> (
-  name        <span class="text-[var(--color-function)]">VARCHAR</span>(<span class="text-[var(--color-number)]">255</span>),
-  title       <span class="text-[var(--color-function)]">VARCHAR</span>(<span class="text-[var(--color-number)]">255</span>),
-  location    <span class="text-[var(--color-function)]">VARCHAR</span>(<span class="text-[var(--color-number)]">255</span>),
-  description <span class="text-[var(--color-function)]">TEXT</span>
-);
-
-<span class="text-[var(--color-keyword)]">INSERT INTO</span> people <span class="text-[var(--color-keyword)]">VALUES</span> (
-  <span class="text-[var(--color-string)]">'Aaron Oswald'</span>,
-  <span class="text-[var(--color-string)]">'Pr. Data Analyst'</span>,
-  <span class="text-[var(--color-string)]">'Washington, D.C.'</span>,
-  <span class="text-[var(--color-string)]">'Systems thinker who specializes in data'</span>
-);</code></pre>
-
-    <h2 id="current-role">Current Role</h2>
+    <h2>Current Role</h2>
     <p>
       I'm a Principal Data Analyst at Capital One, where I work on turning complex data into
       actionable insights. My day-to-day involves a lot of SQL, a healthy amount of Python,
       and the occasional existential question about data architecture.
     </p>
 
-    <h2 id="background">Background</h2>
+    <h2>Background</h2>
     <p>
       I've always been drawn to understanding how systems work—whether that's databases,
       organizations, or the patterns that emerge from human behavior. This curiosity led me
@@ -50,7 +30,7 @@ const headings = [
       understanding not just the data, but the context it lives in.
     </p>
 
-    <h2 id="approach">Approach</h2>
+    <h2>My Approach</h2>
     <ul>
       <li><strong>Systems thinking:</strong> Understanding how parts connect to form wholes</li>
       <li><strong>Clarity over complexity:</strong> The best solution is usually the simplest one that works</li>
@@ -58,20 +38,22 @@ const headings = [
       <li><strong>Visual communication:</strong> A good chart is worth a thousand rows of data</li>
     </ul>
 
-    <h2 id="outside-work">Outside Work</h2>
+    <h2>Outside Work</h2>
     <p>
       When I'm not querying databases, you might find me:
     </p>
     <ul>
-      <li>Experimenting with AI and music (see: <a href="/projects/ai-music">AI Music Experiments</a>)</li>
+      <li>Experimenting with AI and music</li>
       <li>Building tools to solve problems I probably could have just ignored</li>
-      <li>Occasionally <a href="https://www.instagram.com/p/DNNzlV3Our4/?img_index=1" target="_blank">touching grass</a></li>
+      <li>Occasionally <a href="https://www.instagram.com/p/DNNzlV3Our4/?img_index=1" target="_blank" rel="noopener noreferrer">touching grass</a></li>
     </ul>
 
-    <div class="mt-8 p-4 border border-[var(--color-border)] bg-[var(--color-bg-alt)]">
-      <p class="text-sm text-[var(--color-comment)] !mb-0">
-        -- Want to connect? Try <a href="/contact">File → New Query</a>
-      </p>
-    </div>
-  </section>
-</IDELayout>
+    <h2>Get in Touch</h2>
+    <p>
+      I'm always happy to connect with fellow systems thinkers, data enthusiasts, or anyone
+      who wants to chat about interesting problems. Feel free to reach out via
+      <a href="mailto:hello@aaronos.ai">email</a> or find me on
+      <a href="https://linkedin.com/in/aaronoswald" target="_blank" rel="noopener noreferrer">LinkedIn</a>.
+    </p>
+  </article>
+</GardenLayout>

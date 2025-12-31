@@ -1,0 +1,12 @@
+---
+interface Props {
+  label: string;
+  variant?: 'default' | 'type';
+}
+
+const { label, variant = 'default' } = Astro.props;
+---
+
+<span class:list={['tag', variant === 'type' && 'tag-type']}>
+  {label}
+</span>

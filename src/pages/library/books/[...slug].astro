@@ -1,0 +1,111 @@
+---
+import GardenLayout from '../../../layouts/GardenLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const books = await getCollection('books');
+  return books.map((book) => ({
+    params: { slug: book.id },
+    props: { book },
+  }));
+}
+
+const { book } = Astro.props;
+const { Content } = await render(book);
+
+// Get cover URL (manual override or Open Library fallback)
+function getBookCover(): string {
+  if (book.data.cover) return book.data.cover;
+  if (book.data.isbn) {
+    return `https://covers.openlibrary.org/b/isbn/${book.data.isbn}-L.jpg`;
+  }
+  return '/covers/books/placeholder.jpg';
+}
+
+const coverUrl = getBookCover();
+
+function formatDate(date: Date): string {
+  return date.toLocaleDateString('en-US', {
+    month: 'long',
+    year: 'numeric'
+  });
+}
+---
+
+<GardenLayout title={book.data.title} description={`Review of ${book.data.title} by ${book.data.author}`}>
+  <article class="max-w-3xl mx-auto">
+    <!-- Header with cover and metadata -->
+    <header class="flex flex-col sm:flex-row gap-8 mb-12">
+      <div class="shrink-0">
+        <img
+          src={coverUrl}
+          alt={book.data.title}
+          class="w-40 rounded-lg shadow-lg"
+        />
+      </div>
+      <div class="flex-1">
+        <div class="mb-3">
+          <span class="tag tag-type">book</span>
+          {book.data.favorite && (
+            <span class="tag ml-2 bg-yellow-100 text-yellow-700">★ favorite</span>
+          )}
+        </div>
+        <h1 class="text-2xl md:text-3xl mb-2" style="font-family: var(--font-serif);">
+          {book.data.title}
+        </h1>
+        <p class="text-lg text-[var(--text-secondary)] mb-4">
+          by {book.data.author}
+        </p>
+
+        <div class="flex flex-wrap items-center gap-4 text-sm text-[var(--text-muted)] mb-4">
+          <span>Read {formatDate(book.data.dateRead)}</span>
+          {book.data.rating && (
+            <span class="text-yellow-500">
+              {'★'.repeat(book.data.rating)}{'☆'.repeat(5 - book.data.rating)}
+            </span>
+          )}
+        </div>
+
+        {book.data.tags && book.data.tags.length > 0 && (
+          <div class="flex gap-2 flex-wrap mb-4">
+            {book.data.tags.map((tag: string) => (
+              <span class="tag">{tag}</span>
+            ))}
+          </div>
+        )}
+
+        {book.data.goodreadsUrl && (
+          <a
+            href={book.data.goodreadsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-sm text-[var(--accent)] hover:text-[var(--accent-hover)] inline-flex items-center gap-1"
+          >
+            View on Goodreads
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
+        )}
+      </div>
+    </header>
+
+    <!-- Review content -->
+    <div class="prose">
+      <Content />
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-16 pt-8 border-t border-[var(--border)]">
+      <a
+        href="/library"
+        class="text-sm text-[var(--accent)] hover:text-[var(--accent-hover)] inline-flex items-center gap-2"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        Back to library
+      </a>
+    </footer>
+  </article>
+</GardenLayout>

@@ -1,0 +1,35 @@
+---
+import '../styles/global.css';
+import Nav from '../components/garden/Nav.astro';
+import Footer from '../components/garden/Footer.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  wide?: boolean;
+}
+
+const { title, description = "Aaron's personal site", wide = false } = Astro.props;
+const maxWidth = wide ? 'max-w-4xl' : 'max-w-3xl';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet" />
+    <title>{title} | aaronos.ai</title>
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <Nav />
+    <main class={`flex-1 ${maxWidth} w-full mx-auto px-6 py-12`}>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

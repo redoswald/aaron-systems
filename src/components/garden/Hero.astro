@@ -1,0 +1,95 @@
+---
+interface Props {
+  name: string;
+  tagline: string;
+  bio: string;
+  image?: string;
+}
+
+const { name, tagline, bio, image } = Astro.props;
+---
+
+<section class="flex flex-col md:flex-row gap-8 items-start mb-16">
+  <!-- Photo -->
+  <div class="shrink-0">
+    {image ? (
+      <button
+        type="button"
+        id="hero-image-btn"
+        class="cursor-zoom-in focus:outline-none focus:ring-2 focus:ring-[var(--accent)] rounded-full"
+      >
+        <img
+          src={image}
+          alt={name}
+          class="w-36 h-36 rounded-full object-cover border-2 border-[var(--border)] hover:border-[var(--accent)] transition-colors"
+        />
+      </button>
+    ) : (
+      <div class="w-36 h-36 rounded-full bg-[var(--bg-secondary)] border-2 border-[var(--border)] flex items-center justify-center">
+        <span class="text-4xl text-[var(--text-muted)]">
+          {name.split(' ').map(n => n[0]).join('')}
+        </span>
+      </div>
+    )}
+  </div>
+
+  <!-- Content -->
+  <div class="flex-1">
+    <h1 class="text-3xl md:text-4xl font-medium mb-2" style="font-family: var(--font-serif);">
+      {name}
+    </h1>
+    <p class="text-lg text-[var(--text-secondary)] mb-4">
+      {tagline}
+    </p>
+    <p class="text-[var(--text-primary)] leading-relaxed max-w-xl">
+      {bio}
+    </p>
+  </div>
+</section>
+
+<!-- Lightbox Modal -->
+{image && (
+  <div
+    id="lightbox"
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm cursor-zoom-out"
+  >
+    <button
+      type="button"
+      id="lightbox-close"
+      class="absolute top-4 right-4 text-white/80 hover:text-white transition-colors"
+      aria-label="Close"
+    >
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+    <img
+      src={image}
+      alt={name}
+      class="max-w-[90vw] max-h-[90vh] object-contain rounded-lg shadow-2xl"
+    />
+  </div>
+)}
+
+<script>
+  const btn = document.getElementById('hero-image-btn');
+  const lightbox = document.getElementById('lightbox');
+  const closeBtn = document.getElementById('lightbox-close');
+
+  btn?.addEventListener('click', () => {
+    lightbox?.classList.remove('hidden');
+    lightbox?.classList.add('flex');
+  });
+
+  const closeLightbox = () => {
+    lightbox?.classList.add('hidden');
+    lightbox?.classList.remove('flex');
+  };
+
+  lightbox?.addEventListener('click', closeLightbox);
+  closeBtn?.addEventListener('click', closeLightbox);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeLightbox();
+  });
+</script>

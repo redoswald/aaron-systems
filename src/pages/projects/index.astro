@@ -1,52 +1,33 @@
 ---
-import IDELayout from '../../layouts/IDELayout.astro';
+import GardenLayout from '../../layouts/GardenLayout.astro';
+import Card from '../../components/garden/Card.astro';
 import { getCollection } from 'astro:content';
 
-const projects = await getCollection('projects');
+const projects = await getCollection('projects', ({ data }) => !data.draft);
 const sortedProjects = projects.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-
-const headings = [
-  { depth: 1, slug: 'projects', text: 'Projects' },
-  ...sortedProjects.map(p => ({
-    depth: 2,
-    slug: p.id,
-    text: p.data.title
-  }))
-];
 ---
 
-<IDELayout title="Projects" description="Things I've built." currentPath="/projects" headings={headings}>
-  <section>
-    <h1 id="projects" class="!mt-0">Projects</h1>
-    <p class="text-[var(--color-comment)] mb-8">
-      -- A showcase of things I've built, from data visualizations to experimental tools.
+<GardenLayout title="Projects" description="Things I've built." wide>
+  <header class="mb-12">
+    <h1 class="text-3xl mb-4" style="font-family: var(--font-serif);">Projects</h1>
+    <p class="text-[var(--text-secondary)]">
+      A showcase of things I've built, from data visualizations to experimental tools.
     </p>
+  </header>
 
-    {sortedProjects.length === 0 ? (
-      <p class="text-[var(--color-text-muted)]">-- No projects yet. Check back soon.</p>
-    ) : (
-      <ul class="space-y-8">
-        {sortedProjects.map((project) => (
-          <li id={project.id}>
-            <a href={`/projects/${project.id}`} class="group block">
-              <h2 class="text-lg font-medium text-[var(--color-function)] group-hover:text-[var(--color-accent)] transition-colors !mt-0 !mb-1">
-                {project.data.title}
-              </h2>
-              <p class="text-[var(--color-text-muted)]">
-                {project.data.description}
-              </p>
-              <div class="flex gap-4 mt-2 text-sm">
-                {project.data.link && (
-                  <span class="text-[var(--color-string)]">[live]</span>
-                )}
-                {project.data.repo && (
-                  <span class="text-[var(--color-string)]">[source]</span>
-                )}
-              </div>
-            </a>
-          </li>
-        ))}
-      </ul>
-    )}
-  </section>
-</IDELayout>
+  {sortedProjects.length === 0 ? (
+    <p class="text-[var(--text-muted)]">No projects yet. Check back soon.</p>
+  ) : (
+    <div class="grid md:grid-cols-2 gap-6">
+      {sortedProjects.map((project) => (
+        <Card
+          type="project"
+          title={project.data.title}
+          description={project.data.description}
+          date={project.data.date}
+          href={`/projects/${project.id}`}
+        />
+      ))}
+    </div>
+  )}
+</GardenLayout>

@@ -1,0 +1,133 @@
+---
+import GardenLayout from '../../layouts/GardenLayout.astro';
+import PostList from '../../components/garden/PostList.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('blog', ({ data }) => !data.draft);
+const books = await getCollection('books');
+const films = await getCollection('films');
+
+// Determine post type based on path
+function getPostType(id: string): string {
+  if (id.includes('linkpost')) return 'linkpost';
+  return 'essay';
+}
+
+// Transform blog posts
+const blogPosts = posts.map(post => ({
+  type: getPostType(post.id),
+  title: post.data.title,
+  date: post.data.date,
+  href: `/writing/${post.id}`,
+}));
+
+// Transform book reviews
+const bookReviews = books.map(book => ({
+  type: 'review' as const,
+  title: book.data.title,
+  date: book.data.dateRead,
+  href: `/library/books/${book.id}`,
+}));
+
+// Transform film reviews
+const filmReviews = films.map(film => ({
+  type: 'review' as const,
+  title: film.data.title,
+  date: film.data.dateWatched,
+  href: `/library/films/${film.id}`,
+}));
+
+// Combine and sort all posts chronologically
+const allPosts = [...blogPosts, ...bookReviews, ...filmReviews]
+  .sort((a, b) => b.date.valueOf() - a.date.valueOf());
+
+// Group by year
+const postsByYear = allPosts.reduce((acc, post) => {
+  const year = post.date.getFullYear();
+  if (!acc[year]) acc[year] = [];
+  acc[year].push(post);
+  return acc;
+}, {} as Record<number, typeof allPosts>);
+
+const years = Object.keys(postsByYear).map(Number).sort((a, b) => b - a);
+
+// Count by type
+const typeCounts = {
+  all: allPosts.length,
+  essays: allPosts.filter(p => p.type === 'essay').length,
+  linkposts: allPosts.filter(p => p.type === 'linkpost').length,
+  reviews: allPosts.filter(p => p.type === 'review').length,
+};
+---
+
+<GardenLayout title="Writing" description="Essays, notes, and monthly link roundups.">
+  <header class="mb-12">
+    <h1 class="text-3xl mb-4" style="font-family: var(--font-serif);">Writing</h1>
+    <p class="text-[var(--text-secondary)]">
+      Essays, notes, and monthly link roundups.
+    </p>
+  </header>
+
+  <!-- Filter Tabs -->
+  <div class="flex gap-2 mb-8 flex-wrap" id="filter-tabs">
+    <button class="filter-tab active" data-filter="all">
+      All ({typeCounts.all})
+    </button>
+    <button class="filter-tab" data-filter="essay">
+      Essays ({typeCounts.essays})
+    </button>
+    <button class="filter-tab" data-filter="review">
+      Reviews ({typeCounts.reviews})
+    </button>
+    <button class="filter-tab" data-filter="linkpost">
+      Linkposts ({typeCounts.linkposts})
+    </button>
+  </div>
+
+  <!-- Posts grouped by year -->
+  {years.map(year => (
+    <section class="mb-12 year-section" data-year={year}>
+      <h2 class="text-lg font-medium text-[var(--text-secondary)] mb-4">{year}</h2>
+      <PostList posts={postsByYear[year]} />
+    </section>
+  ))}
+</GardenLayout>
+
+<script>
+  const tabs = document.querySelectorAll('.filter-tab');
+  const postItems = document.querySelectorAll('.post-item');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const filter = tab.getAttribute('data-filter');
+
+      // Update active tab
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+
+      // Filter posts
+      postItems.forEach(item => {
+        const typeTag = item.querySelector('.tag-type');
+        const type = typeTag?.textContent?.trim();
+
+        if (filter === 'all') {
+          (item as HTMLElement).style.display = '';
+        } else {
+          const typeMap: Record<string, string> = {
+            'essay': 'essay',
+            'linkpost': 'links',
+            'review': 'review',
+          };
+          const shouldShow = type === typeMap[filter];
+          (item as HTMLElement).style.display = shouldShow ? '' : 'none';
+        }
+      });
+
+      // Hide empty year sections
+      document.querySelectorAll('.year-section').forEach(section => {
+        const visiblePosts = section.querySelectorAll('.post-item:not([style*="display: none"])');
+        (section as HTMLElement).style.display = visiblePosts.length > 0 ? '' : 'none';
+      });
+    });
+  });
+</script>

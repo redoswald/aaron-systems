@@ -1,0 +1,55 @@
+---
+interface Item {
+  title: string;
+  subtitle: string; // author or director
+  cover: string;
+  href: string;
+  rating?: number;
+  favorite?: boolean;
+  type: 'book' | 'film';
+}
+
+interface Props {
+  items: Item[];
+}
+
+const { items } = Astro.props;
+---
+
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+  {items.map(item => (
+    <a href={item.href} class="group" data-type={item.type}>
+      <div class="relative aspect-[2/3] mb-3 overflow-hidden rounded-lg shadow-sm group-hover:shadow-lg transition-all duration-200 bg-[var(--bg-secondary)]">
+        <img
+          src={item.cover}
+          alt={item.title}
+          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+          loading="lazy"
+        />
+        {item.favorite && (
+          <span class="absolute top-2 right-2 text-yellow-400 drop-shadow-md text-lg">★</span>
+        )}
+        {item.rating && (
+          <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+            <span class="text-white text-lg">
+              {'★'.repeat(item.rating)}{'☆'.repeat(5 - item.rating)}
+            </span>
+          </div>
+        )}
+      </div>
+      <h3 class="text-sm font-medium text-[var(--text-primary)] line-clamp-2 group-hover:text-[var(--accent)] transition-colors">
+        {item.title}
+      </h3>
+      <p class="text-xs text-[var(--text-muted)] mt-0.5">{item.subtitle}</p>
+    </a>
+  ))}
+</div>
+
+<style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

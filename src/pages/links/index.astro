@@ -1,51 +1,58 @@
 ---
-import IDELayout from '../../layouts/IDELayout.astro';
+import GardenLayout from '../../layouts/GardenLayout.astro';
 import { getCollection } from 'astro:content';
 
 const links = await getCollection('links');
 const sortedLinks = links.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
-const headings = [
-  { depth: 1, slug: 'links', text: 'Links' },
-];
+function formatDate(date: Date): string {
+  return date.toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric'
+  });
+}
 ---
 
-<IDELayout title="Links" description="Curated links with commentary." currentPath="/links" headings={headings}>
-  <section>
-    <h1 id="links" class="!mt-0">Links</h1>
-    <p class="text-[var(--color-comment)] mb-8">
-      -- Curated links to things I find interesting.
+<GardenLayout title="Links" description="Curated links to things I find interesting.">
+  <header class="mb-12">
+    <h1 class="text-3xl mb-4" style="font-family: var(--font-serif);">Links</h1>
+    <p class="text-[var(--text-secondary)]">
+      Curated links to things I find interesting.
     </p>
+  </header>
 
-    {sortedLinks.length === 0 ? (
-      <p class="text-[var(--color-text-muted)]">-- No links yet. Check back soon.</p>
-    ) : (
-      <ul class="space-y-6">
-        {sortedLinks.map((link) => (
-          <li class="border-b border-[var(--color-border)] pb-6 last:border-0">
-            <a
-              href={link.data.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="text-lg font-medium text-[var(--color-accent)] hover:text-[var(--color-accent-hover)]"
-            >
-              {link.data.title} <span class="text-[var(--color-text-muted)]">&nearr;</span>
-            </a>
-            <time class="text-sm text-[var(--color-comment)] block mt-1">
-              -- {link.data.date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
-            </time>
-            {link.data.tags && link.data.tags.length > 0 && (
-              <div class="flex gap-2 mt-2">
-                {link.data.tags.map((tag: string) => (
-                  <span class="text-xs bg-[var(--color-bg-alt)] text-[var(--color-keyword)] px-2 py-1">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            )}
-          </li>
-        ))}
-      </ul>
-    )}
-  </section>
-</IDELayout>
+  {sortedLinks.length === 0 ? (
+    <p class="text-[var(--text-muted)]">No links yet. Check back soon.</p>
+  ) : (
+    <ul class="space-y-6">
+      {sortedLinks.map((link) => (
+        <li class="pb-6 border-b border-[var(--border)] last:border-0">
+          <a
+            href={link.data.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group"
+          >
+            <h2 class="text-lg font-medium text-[var(--text-primary)] group-hover:text-[var(--accent)] transition-colors inline-flex items-center gap-2" style="font-family: var(--font-serif);">
+              {link.data.title}
+              <svg class="w-4 h-4 text-[var(--text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </h2>
+          </a>
+          <time class="text-sm text-[var(--text-muted)] block mt-1">
+            {formatDate(link.data.date)}
+          </time>
+          {link.data.tags && link.data.tags.length > 0 && (
+            <div class="flex gap-2 mt-3 flex-wrap">
+              {link.data.tags.map((tag: string) => (
+                <span class="tag">{tag}</span>
+              ))}
+            </div>
+          )}
+        </li>
+      ))}
+    </ul>
+  )}
+</GardenLayout>

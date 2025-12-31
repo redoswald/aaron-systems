@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git checkout:*)",
+      "Bash(npm run dev:*)",
+      "Bash(curl:*)",
+      "Bash(ls:*)",
+      "Bash(unzip:*)",
+      "Bash(node scripts/import-blogger-books.js:*)",
+      "Bash(grep:*)",
+      "Bash(for f in *.md)",
+      "Bash(do sed -i '' \"s/&amp;#39;/''/g\" \"$f\")",
+      "Bash(done)",
+      "Bash(node scripts/enrich-books.js:*)",
+      "Bash(node scripts/enrich-books-v2.js:*)",
+      "Bash(node scripts/enrich-books-v3.js:*)",
+      "Bash(node scripts/fix-multiline-titles.js:*)",
+      "Bash(for f in src/content/library/books/*.md)",
+      "Bash(do if ! grep -q \"isbn:\" \"$f\")",
+      "Bash(then grep \"title:\" \"$f\")",
+      "Bash(fi)",
+      "Bash(cat:*)",
+      "Bash(source .env)",
+      "Bash(export TMDB_API_KEY)",
+      "Bash(node scripts/import-letterboxd.js:*)",
+      "Bash(git add:*)",
+      "Bash(git reset:*)"
+    ]
+  }
+}

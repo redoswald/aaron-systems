@@ -1,0 +1,69 @@
+---
+interface Props {
+  type: 'project' | 'essay' | 'note' | 'book-review' | 'film-review' | 'linkpost';
+  title: string;
+  description: string;
+  date?: Date;
+  href: string;
+  tags?: string[];
+}
+
+const { type, title, description, date, href, tags } = Astro.props;
+
+function formatDate(date: Date): string {
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+  });
+}
+
+const typeLabels: Record<string, string> = {
+  'project': 'project',
+  'essay': 'essay',
+  'note': 'note',
+  'book-review': 'book',
+  'film-review': 'film',
+  'linkpost': 'links',
+};
+---
+
+<a
+  href={href}
+  class="block card group"
+>
+  <div class="flex justify-between items-start mb-3">
+    <span class="tag tag-type">
+      {typeLabels[type] || type}
+    </span>
+    {date && (
+      <span class="text-xs text-[var(--text-muted)]">
+        {formatDate(date)}
+      </span>
+    )}
+  </div>
+
+  <h3 class="text-lg font-medium text-[var(--text-primary)] mb-2 group-hover:text-[var(--accent)] transition-colors" style="font-family: var(--font-serif);">
+    {title}
+  </h3>
+
+  <p class="text-sm text-[var(--text-secondary)] mb-3 line-clamp-2">
+    {description}
+  </p>
+
+  {tags && tags.length > 0 && (
+    <div class="flex gap-2 flex-wrap">
+      {tags.map(tag => (
+        <span class="tag">{tag}</span>
+      ))}
+    </div>
+  )}
+</a>
+
+<style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>
