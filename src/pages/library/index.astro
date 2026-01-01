@@ -50,6 +50,7 @@ const bookItems = books
     favorite: book.data.favorite,
     type: 'book' as const,
     date: book.data.dateRead,
+    isStub: book.data.tags?.includes('stub') ?? false,
   }));
 
 const filmItems = await Promise.all(
@@ -62,6 +63,7 @@ const filmItems = await Promise.all(
     favorite: film.data.favorite,
     type: 'film' as const,
     date: film.data.dateWatched,
+    isStub: film.data.tags?.includes('stub') ?? false,
   }))
 );
 
@@ -78,10 +80,12 @@ const itemsByYear = allItems.reduce((acc, item) => {
 
 const years = Object.keys(itemsByYear).map(Number).sort((a, b) => b - a);
 
+const stubCount = allItems.filter(item => item.isStub).length;
 const counts = {
   all: allItems.length,
   books: bookItems.length,
   films: filmItems.length,
+  withReviews: allItems.length - stubCount,
 };
 ---
 
@@ -94,16 +98,22 @@ const counts = {
   </header>
 
   <!-- Filter Tabs -->
-  <div class="flex gap-2 mb-8" id="filter-tabs">
-    <button class="filter-tab active" data-filter="all">
-      All ({counts.all})
-    </button>
-    <button class="filter-tab" data-filter="book">
-      Books ({counts.books})
-    </button>
-    <button class="filter-tab" data-filter="film">
-      Films ({counts.films})
-    </button>
+  <div class="flex flex-wrap items-center gap-4 mb-8">
+    <div class="flex gap-2" id="filter-tabs">
+      <button class="filter-tab active" data-filter="all">
+        All ({counts.all})
+      </button>
+      <button class="filter-tab" data-filter="book">
+        Books ({counts.books})
+      </button>
+      <button class="filter-tab" data-filter="film">
+        Films ({counts.films})
+      </button>
+    </div>
+    <label class="flex items-center gap-2 text-sm text-[var(--text-muted)] cursor-pointer select-none">
+      <input type="checkbox" id="hide-stubs" class="accent-[var(--accent)]" />
+      <span>Only show items with reviews ({counts.withReviews})</span>
+    </label>
   </div>
 
   <!-- Cover Grid by Year -->
@@ -120,7 +130,7 @@ const counts = {
           </h2>
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
             {itemsByYear[year].map(item => (
-              <a href={item.href} class="group library-item" data-type={item.type}>
+              <a href={item.href} class="group library-item" data-type={item.type} data-stub={item.isStub}>
                 <div class="relative aspect-[2/3] mb-3 overflow-hidden rounded-lg shadow-sm group-hover:shadow-lg transition-all duration-200 bg-[var(--bg-secondary)]">
                   <img
                     src={item.cover}
@@ -175,35 +185,46 @@ const counts = {
 <script>
   const tabs = document.querySelectorAll('.filter-tab');
   const yearSections = document.querySelectorAll('.year-section');
+  const hideStubsCheckbox = document.getElementById('hide-stubs') as HTMLInputElement;
+
+  function applyFilters() {
+    const activeTab = document.querySelector('.filter-tab.active');
+    const filter = activeTab?.getAttribute('data-filter') || 'all';
+    const hideStubs = hideStubsCheckbox?.checked || false;
+
+    yearSections.forEach(section => {
+      const items = section.querySelectorAll('.library-item');
+      let visibleCount = 0;
+
+      items.forEach(item => {
+        const type = item.getAttribute('data-type');
+        const isStub = item.getAttribute('data-stub') === 'true';
+
+        const matchesType = filter === 'all' || type === filter;
+        const matchesStub = !hideStubs || !isStub;
+
+        if (matchesType && matchesStub) {
+          (item as HTMLElement).style.display = '';
+          visibleCount++;
+        } else {
+          (item as HTMLElement).style.display = 'none';
+        }
+      });
+
+      // Hide year section if no visible items
+      (section as HTMLElement).style.display = visibleCount > 0 ? '' : 'none';
+    });
+  }
 
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
-      const filter = tab.getAttribute('data-filter');
-
-      // Update active tab
       tabs.forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
-
-      // Filter items and show/hide year sections
-      yearSections.forEach(section => {
-        const items = section.querySelectorAll('.library-item');
-        let visibleCount = 0;
-
-        items.forEach(item => {
-          const type = item.getAttribute('data-type');
-          if (filter === 'all' || type === filter) {
-            (item as HTMLElement).style.display = '';
-            visibleCount++;
-          } else {
-            (item as HTMLElement).style.display = 'none';
-          }
-        });
-
-        // Hide year section if no visible items
-        (section as HTMLElement).style.display = visibleCount > 0 ? '' : 'none';
-      });
+      applyFilters();
     });
   });
+
+  hideStubsCheckbox?.addEventListener('change', applyFilters);
 </script>
 
 <style>

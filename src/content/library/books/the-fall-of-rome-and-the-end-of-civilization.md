@@ -1,12 +1,13 @@
 ---
-title: "The Fall of Rome: And the End of Civilization"
-author: "Bryan Ward -Perkins"
+title: "The Fall of Rome and the End of Civilization"
+author: "Bryan Ward-Perkins"
 isbn: "0192807285"
 dateRead: 2021-10-28
-tags: ["imported"]
+rating: 5
+tags: ["imported", "goodreads"]
 ---
 
-After [reading about the Dark Ages](https://aaronsreviewofbooks.blogspot.com/2021/09/review-ancient-civilizations-of-north.html), I wanted to go back and find out: how did the lights go out? The answer is war and economic collapse and war. 
+After reading about the Dark Ages, I wanted to go back and find out: how did the lights go out? The answer is war and economic collapse and war. 
 
 If you were there during the fall of Rome, you would feel it. Your armies are scattered by peoples without training. Your Container Stores are sitting languishing with your productive capacities sent overseas and destroyed by the hordes. The ships that brought food and oil and wine have stopped coming and those that are here sit in the harbor riding the waves like logs. Building great buildings is impossible. Your children will know your home by holes in the ground where you put wooden logs.
 
@@ -30,4 +31,4 @@ The second is the opposite side of the coin- Roman elite disunity. The Romans ha
 
 The final component was the vastly unequal Roman system. Rome was a slave society, and these slaves fed the armies of its enemies and rebelled against their masters. The masters themselves were unbelievably rich and owned lands from one end of the Mediterranean to the other. 
 
-Enemy unity. Domestic division. Inequality. These led to a retreating army, an unending economic supply shock, and the end of a civilization.
+Enemy Unity. Domestic division. Inequality. These led to a retreating army, an unending economic supply shock, and the end of a civilization.
