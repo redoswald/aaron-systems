@@ -1,0 +1,132 @@
+---
+title: Friend (a personal PRM)
+description: >-
+  A personal relationship management tool for keeping in touch with your
+  network.
+date: 2025-12-01
+draft: false
+status: in-progress
+featured: true
+---
+# From Spreadsheet Social Tracking to an All-Friends App
+
+Like most analysts who are interested—some would say *too* interested—in data, I’ve long maintained a spreadsheet of my different social hangouts with friends.
+
+It lived as a single Google Sheet with three different tables that I would check every Monday.
+
+---
+
+## The Spreadsheet System
+
+### Table 1: The People List
+
+The first table was simply a list of my friends:
+
+* work friends
+* my girlfriend’s friends
+* the work friends of my friends
+
+For each person, I assigned a number: how many days I can go before I start to get an itch to see them again.
+
+Some examples:
+
+* **For loose acquaintances who I still want to keep up with, it might be 180 days. Twice a year is enough to get a life update.**
+* **For people I need to see for my mental health, it might be 14 days.**
+
+### Table 2: The Hangout Log
+
+Then I would log every single time I hung out with each person.
+
+### Table 3: The “Who’s Due” Ranking
+
+Because I had the list of people, their “itch interval,” and the hangout log, I could use Google Sheets’ QUERY function to generate a ranked list of:
+
+* who I should see soon
+* how overdue I am
+* how long I have before I start getting in trouble with myself
+
+It’s a simple solution. It’s pretty elegant.
+
+If you’re not going to use an app, I honestly recommend doing something like that.
+
+---
+
+## Turning It Into a Web App
+
+If you’re willing to use an app… well, I got Claude to develop it.
+
+As soon as Claude Code came out, I started experimenting with it. The result is what I call All Friends, or just Friends—a web app.
+
+In theory, we could throw it into whatever we want. We could get Claude to write it into a phone app pretty quickly. The point is to be more intentional about friendships, and not let time slip by without talking to people when we actually want to.
+
+Functionally, the web app does the exact same thing as the spreadsheet. But it also lets us do more, because it supports data structures that are too complicated for a spreadsheet that’s basically a long row of events.
+
+---
+
+## Features That Go Beyond a Spreadsheet
+
+### Notes and Contact Management
+
+One big upgrade is basic contact management: notes about people.
+
+This is a common CRM concept, and in my notes I literally call this a PRM, like a personal relationship manager.
+
+It’s stuff like:
+
+* What are the things we’ve talked about?
+* What are the things that matter to this person?
+* What do I need to be reminded of?
+* What did we talk about last time that I might want to bring up again?
+
+The reminder system from the spreadsheet still exists. It’s right there, ready whenever I need to look at it.
+
+### Snoozing and Out-of-Office Tracking
+
+A lot of the time, you’ll ask someone, “Hey, do you want to hang out?” and they’ll say they’re not in town. Sometimes they won’t be in town for a while.
+
+At this point I have a large number of friends who work for the World Bank, and these people can leave DC for months at a time to go on work missions across the planet. 
+
+So we built an essential “snooze” function—an out-of-office scheduling feature—where you can note that they’re unavailable and when they’ll be back. Then you can be ready to reach out when they return.
+
+### Relationship Stage Tracking
+
+Another feature idea—one I haven’t developed yet, but I think CRMs do—is an intentional relationship stage tracker.
+
+The idea is that you can categorize people as:
+
+* acquaintances
+* developing relationships
+* close relationships
+
+And that gives you insight into where people are in the flow of going from “a person you know” to “a person that knows you.”
+
+---
+
+## What Building With Claude Has Actually Been Like
+
+This is one project I’ve been working on for a while, off and on, whenever I have access to Claude.
+
+It’s been very useful for figuring out how to actually get an application set up. It runs on Vercel and Supabase, and it’s almost entirely engineered by Claude.
+
+The biggest thing I do is act as product management.
+
+That’s a useful skill when you’re using Claude Code: you need a vision for what you want the product to be, because Claude will generally write something different than what that vision is if you’re not specific.
+
+In this case, I had the dataset and the product shape already, because I was basically converting a spreadsheet I already used into something I could access from my phone and from anywhere—not just from my laptop inside Google Sheets.
+
+Perhaps, I’ll write more in the future about access to Claude Code and what that workflow looks like in practice. I’ll try to have more to say than what people are posting on Twitter. But suffice it to say: you can create really special things when you’re able to lay out requirements and specifications that are:
+
+* **technically grounded, so you’re asking Claude to do what’s actually possible**
+* **experientially grounded, so Claude can grok what you’re trying to build in human terms**
+
+---
+
+## Outro
+
+In the end, this project is less about “tracking” people and more about protecting something I care about: the relationships that make life feel like life.
+
+The spreadsheet was already a decent system. The app is just the same idea with fewer frictions and more memory—something I can carry with me, update in real time, and use to act on intention instead of guilt.
+
+And if there’s one lesson in all of it, it’s this: the tools aren’t the point. The point is showing up—before time quietly makes the decision for you.
+
+\
