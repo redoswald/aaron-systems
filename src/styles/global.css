@@ -288,16 +288,17 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 500;
   transition: all 0.15s ease;
   cursor: pointer;
+  text-decoration: none !important;
 }
 
 .btn-primary {
   background-color: var(--accent);
-  color: white;
+  color: white !important;
 }
 
 .btn-primary:hover {
   background-color: var(--accent-hover);
-  color: white;
+  color: white !important;
 }
 
 .btn-secondary {
