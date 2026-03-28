@@ -18,7 +18,7 @@ At its core, it is a way to watch how banks expanded across the country over tim
 
 What first got me interested in this was actually Wikipedia.
 
-In my day job working at a bank circa 2021, I spend a lot of time researching competitors. That often meant doing something very simple: reading their Wikipedia pages. On many of those pages, there would be [these beautifully made maps](https://en.wikipedia.org/wiki/SunTrust#/media/File:SunTrust_footprint_2010-08.png) showing a bank’s branch network at a particular moment in time. I kept thinking: these are great. They tell a lot of the story instantly.
+In my day job working at a bank circa 2021, I spent a lot of time researching competitors. That often meant doing something very simple: reading their Wikipedia pages. On many of those pages, there would be [these beautifully made maps](https://en.wikipedia.org/wiki/SunTrust#/media/File:SunTrust_footprint_2010-08.png) showing a bank’s branch network at a particular moment in time. I kept thinking: these are great. They tell a lot of the story instantly.
 
 But I also wanted more than a static map. I wanted something dynamic, something more exhaustive, something that could actually be explored.
 
@@ -28,7 +28,7 @@ As someone who worked at a bank, I was immediately interested in whether pieces 
 
 More recently, though, I wanted to see what Claude could do with the concept.
 
-So I gave Claude the FDIC source and the basic vision, and together we were able to build [Footprint](https://footprint.aaronos.ai/).
+So I gave the little robot guy the FDIC source and the basic vision, and together we were able to build [Footprint](https://footprint.aaronos.ai/).
 
 ## **What I wanted it to do**
 
@@ -44,7 +44,7 @@ The second idea was more ambitious: I wanted to understand the incremental path 
 
 If you wanted to turn America’s big three banking system into a big four or big five, what sequence of acquisitions would actually get you there? What constellation of banks would need to come together?
 
-Claude ended up building a kind of M\&A simulator for this. You can select a bank, identify the farthest useful acquisition target, and incrementally build outward — essentially a “build your own big bank” tool. There are some funny edge cases in the data, including the fact that if you just go by certain priority rules, there is a Puerto Rico-only bank that every other bank would have to acquire first. I do not think that reflects how the economics would work in real life, but it is exactly the kind of thing that makes the exercise interesting.
+We ended up building a kind of M\&A simulator for this. You can select a bank, identify the farthest useful acquisition target, and incrementally build outward — essentially a “build your own big bank” tool. There are some funny edge cases in the data, including the fact that if you just go by certain priority rules, there is a Puerto Rico-only bank that every other bank would have to acquire first. I do not think that reflects how the economics would work in real life, but it is exactly the kind of thing that makes the exercise interesting.
 
 ![](content/Screenshot%202026-03-16%20at%2010.08.25%E2%80%AFPM.png)
 
@@ -58,7 +58,7 @@ We currently have two stories.
 
 One is the broad industry story: how America moved from a post-interstate-banking world, to a more regionally organized system, and then into today’s big-three era.
 
-The other is a story about Chase. I did not come up with that one — Claude did. Claude more or less decided, “This is the story I want to tell,” and it ended up being genuinely interesting. One of the things I learned through that process is that Jamie Dimon’s roots do not really come from the old Manhattan Chase story people might assume. He come from Bank One! But he's the Chase guy!
+The other is a story about Chase. I did not come up with that one — Claude did. The guy more or less decided, “This is the story I want to tell,” and it ended up being genuinely interesting. One of the things I learned through that process is that Jamie Dimon’s roots do not really come from the old Manhattan Chase story people might assume. He come from Bank One! But he's the Chase guy!
 
 ![](content/Screenshot%202026-03-16%20at%2010.09.34%E2%80%AFPM.png)
 
@@ -82,12 +82,12 @@ It is a way to make the geography of American banking legible — and a way to e
 
 One of the most interesting parts of building Footprint was seeing where Claude was excellent and where it still struggled.
 
-Claude was remarkably good at turning a verbal product vision into something functional. In many ways, it built exactly what I described. That part felt almost magical.
+The robot was remarkably good at turning a verbal product vision into something functional. In many ways, it built exactly what I described. That part felt almost magical.
 
 But it also exposed one of the current weak points of AI-assisted creation: verification.
 
-For example, in storytelling mode, Claude might say something like: `one bank is shown in red and another is shown in blue`. Then you look at the page, and both are red. The underlying concept is right, but the visual execution is wrong. And because the issue is visual and specific, verifying it becomes weirdly expensive. You have to manually check his work.
+For example, in storytelling mode, it might say something like: `one bank is shown in red and another is shown in blue`. Then you look at the page, and both are red. The underlying concept is right, but the visual execution is wrong. And because the issue is visual and specific, verifying it becomes weirdly expensive. You have to manually check his work.
 
 That feels like one of the clearest lessons from the project. Generation is getting cheap. Verification is still expensive.
 
-Claude can build. It can describe. It can infer. But making sure that every visual detail is actually correct — especially, especially when narrative, visualization, and interface have to line up perfectly — still requires a human in the loop.
+Claude can build. He can describe. He can infer. But making sure that every visual detail is actually correct — especially, especially when narrative, visualization, and interface have to line up perfectly — still requires a human in the loop.
