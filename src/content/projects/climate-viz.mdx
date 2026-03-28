@@ -6,13 +6,17 @@ featured: true
 link: "https://public.tableau.com/app/profile/aaron.oswald/viz/ClimateComparer/CompareCities"
 ---
 
-An exploration of climate data through interactive visualization.
+In the middle of Covid, I was stuck at home in New York during a long, grey spring — the kind where you start Googling average temperatures in places you've never been just to feel something. I kept wondering: where in the world actually *feels* like the weather I want? Not just "warm," but the whole picture — sunshine, temperature swings, seasonal rhythm.
 
-## Overview
+So I built a Tableau dashboard to answer that question.
 
-This project visualizes historical climate data to make patterns more accessible and understandable. Compare sunlight and temperatures patterns across different cities.
+## How It Works
 
-## Climate Comparer
+The dashboard pulls historical climate data for cities around the world and lets you compare them side by side. You can look at monthly temperature patterns, sunshine hours, and get a sense of what living somewhere actually feels like across the year — not just the cherry-picked "average high in July" you find on travel blogs.
+
+The most fun feature is the similarity ranking: pick a city you like, and it'll show you the cities with the most similar climate profiles, ranked by how close their monthly patterns are. It's how I found out that Porto, Portugal has surprisingly similar weather to parts of coastal California — the kind of thing you'd never guess without seeing the data.
+
+## The Dashboard
 
 <iframe
   src="https://public.tableau.com/views/ClimateComparer/CompareCities?:embed=y&:display_count=no&:showVizHome=no"
@@ -22,7 +26,10 @@ This project visualizes historical climate data to make patterns more accessible
   allowfullscreen
 ></iframe>
 
+*If the embed doesn't load, you can [view it directly on Tableau Public](https://public.tableau.com/app/profile/aaron.oswald/viz/ClimateComparer/CompareCities).*
+
 ## Features
 
-- Compare the "most similar" cities as ranked by monthly distance
-- See how and when different cities have different climate cycles
+- Compare climate profiles across cities with monthly temperature and sunshine data
+- Find the "most similar" cities to any given city, ranked by monthly distance
+- See how and when different cities diverge in their seasonal cycles
