@@ -39,7 +39,7 @@ function getBookCover(book: typeof books[0]): string {
   if (book.data.isbn) {
     return `https://covers.openlibrary.org/b/isbn/${book.data.isbn}-L.jpg`;
   }
-  return '/covers/books/placeholder.jpg';
+  return '/covers/books/placeholder.svg';
 }
 
 // Helper to get film poster
@@ -61,7 +61,7 @@ async function getFilmCover(film: typeof films[0]): Promise<string> {
       }
     }
   }
-  return '/covers/films/placeholder.jpg';
+  return '/covers/films/placeholder.svg';
 }
 
 // Get recent library items (8 most recent books/films combined)

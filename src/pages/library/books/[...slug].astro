@@ -19,7 +19,7 @@ function getBookCover(): string {
   if (book.data.isbn) {
     return `https://covers.openlibrary.org/b/isbn/${book.data.isbn}-L.jpg`;
   }
-  return '/covers/books/placeholder.jpg';
+  return '/covers/books/placeholder.svg';
 }
 
 const coverUrl = getBookCover();
