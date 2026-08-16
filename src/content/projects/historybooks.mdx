@@ -1,0 +1,81 @@
+---
+title: "Historybooks"
+description: "A living tree of every history book I've read — connected by context and chronology from the Big Bang to today."
+date: 2026-08-16
+draft: false
+status: in-progress
+link: "https://historybooks.aaronos.ai/"
+featured: true
+---
+
+Historybooks is a tool that Claude and I built to visualize my personal tree of world knowledge. Not a mind map, not an Obsidian graph, but a tree of all the history books that I've read and how they fit together. Each of the dozens of books that I have are connected to each other based on context and chronology, so that you can trace the events and influences of anything at the bottom of the tree all the way back to the Big Bang. The books are roughly organized horizontally across the site by when they happened, and vertically by the regional stories that they trace.
+
+I made it because I wanted to understand… well, everything.
+
+## Reading in syllabi
+
+Almost 10 years ago, I set out to read about the history of the universe. It took me a couple books, maybe five, to realize that was going to be a lot harder than I thought.
+
+[As I have posted before](https://www.aaronos.ai/writing/american_birthday_syllabus), I like to read in what I call syllabi, where I read about a specific subject and then have some list of books that are supposed to elucidate that subject for me. The first was a childishly named "Why Do They Hate Us?", which was a series of books I read to try to understand Donald Trump's 2016 election. The series I read after that I've named "A History of the Slave Power," slave power being the forces at work in the South that created, sustained, and then tried to resurrect American chattel slavery.
+
+And whereas that first syllabus was mostly about modern-day politics, the second syllabus, the slave power, went from before the 1860s all the way up to the present day. But it still had some questions attached to it. There's history before the 1860s. There's history that goes on a lot longer.
+
+And it was in thinking about this that I imagined: let's go all the way back and work our way forward. Let's read about the origins of the universe, and then, step by step, we will get to the modern day.
+
+## The chain
+
+The rules were simple. The books are allowed to cover more than just their time span, but the book itself has to be dominantly or thematically about the next step in the great chain. And I expected it to be a chain.
+
+I started with some popular physics books like Lawrence Krauss's "A Universe from Nothing" and Neil deGrasse Tyson's "Origins." And from there, made my way from physics to geology to biology with "The Vital Question," to the dinosaurs, and then finally to the evolution of man.
+
+And then, once there, things started to get tricky. How do you describe the history of man? How do you make it one concise story?
+
+I tried my best to start with the history of how civilizations started to form, in books like "Against the Grain," where we look at the agricultural revolution. And yet, clearly something was missing. The agricultural revolution happened differently in different places.
+
+So, I ignored it! And I jumped to SPQR because I heard it was a good book. Reading about Roman history was then intended to lead to something like the fall of Rome, early European history, American history — something that gets us to the modern day.
+
+It was around this time that I began to realize: if we're going to jump to American history, then I'm going to need to understand Indigenous American history. But wait — I've already sort of skipped that.
+
+## The chain breaks
+
+I created a visualization in the Obsidian Canvas soon after it was released, and started to look for the gaps in what I hadn't read yet. And I was terrified to see that my history of the world was based, maybe not on a lie, but on a mistake. History is much more interconnected and nonlinear.
+
+Even though the history of the universe before man is homogeneous and linear, the history of man jumps out from Africa into all the compass directions. The trunk of *Homo erectus* branches, and those branches branch, and those branches branch, and they extend up into today. If I could not read the history of the universe in a single chain, then I would just have to attempt to construct each of the chains, until it became like a giant willow: each of the limbs telling its own story, but so many and so connected it appeared as one object.
+
+What I would end up doing is placing large gap markers to show myself where I needed to read more. I didn't have anything about ancient Indigenous Americans, so it would be hard to fully understand the context of modern America. I didn't have any history of the East, from the Middle East to China, so how was I going to understand the European empires?
+
+## A syllabus generator
+
+Once I created this map, it became clear that there were gaps in what I was reading. And those gaps became ways for me to create new syllabi.
+
+The map became a syllabus generator: I could look at a section and say, there's nothing there. And then I could go and find the best books that would connect into those sections, and specifically help me answer questions that I wanted to answer.
+
+For example, I wanted to understand the Great Divergence. How is it that Europe did the best out of all of the continents, even though it collapsed with the fall of Rome? So I read several books about that.
+
+I wanted to understand imperialism, which seems like a very similar question, but is distinct: how does imperialism happen? How is it that a tiny island is able to capture so much of the world?
+
+## What's next
+
+I would no longer say I am actively on a project to read from the beginning of history to the end of history (even though I think my understanding of the Big Bang to the dawn of Homo sapiens is quite sufficient).
+
+But I'm still interested in learning more about how these states formed, how they formed separately. And I'm very interested in learning much more about the history of the Far East.
+
+Something that Hegel said — I think it was Hegel — was that the history of non-Western states is essentially the rise and fall of hydraulic empires. And while my reading of the history of Europe and America has lent itself to that interpretation, I'm not fully sure that it's true.
+
+One of my points of origin for reading about Eastern history is Eastern philosophy. When I was in college, I read an encyclopedia of Eastern philosophy. And that tells me that there is some societal evolution that was happening — that maybe the history was obliterated from our common minds by European colonialism. At least it was greatly dimmed.
+
+So I'm interested in learning more about the social history, less the political history, though I want to understand how that impacts the modern day.
+
+## The site
+
+With all this knowledge, I generated [this map](https://historybooks.aaronos.ai/): a D3 tree powered by a YAML database, driven by crawling over my Goodreads history which has helpfully already been transposed to [this website](https://www.aaronos.ai/library).
+
+You can just ask Claude to make things like this for you now! Literally a screenshot of the original Obsidian *draft* canvas and instructions to update it with my newest books is sufficient for Claude to get 80% of the work done. The other 20%? New ideas generated only in response to the ease of Claude making features.
+
+For example, there is a "Syllabus View" which lets a user select a specific syllabus I've read, and it will be highlighted on the map. It's a specific route in my thinking. I wouldn't have made this in Obsidian, but Claude was able to grok what I wanted with little feedback other than a paragraph or two of description.
+
+To get the website to look *nicer* than the original draft, which was literally a bunch of book titles, Claude and I added book covers. I added blurbs, and then Claude wrote additional blurbs. He also made book recommendations. I don't necessarily endorse them. We'll see if I actually read what he wants me to read. I have my own list.
+
+## Next steps for the site
+
+This site is live and being updated regularly. As I make my way through my current reading list (Venetian history and Greek history smuggled in between my broader years worth of Chinese history), I will continue to update the tree by adding new fruits. I expect to do this until I know everything, and who can tell when that will be?
