@@ -1,6 +1,9 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
+// How much AI was involved in writing a piece; see /ai
+const aiAssistance = z.enum(['none', 'transcribed', 'edited-supervised', 'edited-unsupervised']).default('none');
+
 const blog = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/blog' }),
   schema: z.object({
@@ -11,6 +14,7 @@ const blog = defineCollection({
     type: z.enum(['essay', 'note', 'book-review', 'film-review', 'linkpost']).optional(),
     featured: z.boolean().default(false),
     tags: z.array(z.string()).optional(),
+    aiAssistance,
   }),
 });
 
@@ -25,6 +29,7 @@ const projects = defineCollection({
     link: z.string().optional(),
     repo: z.string().optional(),
     featured: z.boolean().default(false),
+    aiAssistance,
   }),
 });
 
@@ -51,6 +56,7 @@ const books = defineCollection({
     favorite: z.boolean().default(false),
     tags: z.array(z.string()).optional(),
     goodreadsUrl: z.string().optional(),
+    aiAssistance,
   }),
 });
 
@@ -67,6 +73,7 @@ const films = defineCollection({
     favorite: z.boolean().default(false),
     tags: z.array(z.string()).optional(),
     letterboxdUrl: z.string().optional(),
+    aiAssistance,
   }),
 });
 

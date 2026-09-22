@@ -1,6 +1,7 @@
 ---
 import GardenLayout from '../../../layouts/GardenLayout.astro';
 import { getCollection, render } from 'astro:content';
+import AIDisclosure from '../../../components/garden/AIDisclosure.astro';
 
 export async function getStaticPaths() {
   const books = await getCollection('books');
@@ -89,6 +90,8 @@ function formatDate(date: Date): string {
         )}
       </div>
     </header>
+
+    <AIDisclosure level={book.data.aiAssistance} />
 
     <!-- Review content -->
     <div class="prose">

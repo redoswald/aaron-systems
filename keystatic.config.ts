@@ -1,5 +1,17 @@
 import { config, fields, collection } from '@keystatic/core';
 
+const aiAssistance = fields.select({
+  label: 'AI Assistance',
+  description: 'Shows a disclosure banner linking to /ai',
+  options: [
+    { label: 'None', value: 'none' },
+    { label: 'Transcribed with AI', value: 'transcribed' },
+    { label: 'Transcribed, then edited with AI (supervised)', value: 'edited-supervised' },
+    { label: 'Transcribed, then edited by AI (unsupervised)', value: 'edited-unsupervised' },
+  ],
+  defaultValue: 'none',
+});
+
 export default config({
   storage:
     process.env.NODE_ENV === 'development'
@@ -37,6 +49,7 @@ export default config({
           label: 'Tags',
           itemLabel: (props) => props.value || 'New tag',
         }),
+        aiAssistance,
         content: fields.mdx({ label: 'Content' }),
       },
     }),
@@ -63,6 +76,7 @@ export default config({
         link: fields.url({ label: 'Live URL' }),
         repo: fields.url({ label: 'Repository URL' }),
         featured: fields.checkbox({ label: 'Featured', defaultValue: false }),
+        aiAssistance,
         content: fields.mdx({ label: 'Content' }),
       },
     }),
@@ -115,6 +129,7 @@ export default config({
           itemLabel: (props) => props.value || 'New tag',
         }),
         goodreadsUrl: fields.url({ label: 'Goodreads URL' }),
+        aiAssistance,
         content: fields.mdx({ label: 'Review' }),
       },
     }),
@@ -142,6 +157,7 @@ export default config({
           itemLabel: (props) => props.value || 'New tag',
         }),
         letterboxdUrl: fields.url({ label: 'Letterboxd URL' }),
+        aiAssistance,
         content: fields.mdx({ label: 'Review' }),
       },
     }),

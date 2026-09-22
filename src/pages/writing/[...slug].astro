@@ -1,6 +1,7 @@
 ---
 import GardenLayout from '../../layouts/GardenLayout.astro';
 import { getCollection, render } from 'astro:content';
+import AIDisclosure from '../../components/garden/AIDisclosure.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -81,6 +82,8 @@ const showToc = tocHeadings.length > 3;
           </div>
         )}
       </header>
+
+      <AIDisclosure level={post.data.aiAssistance} />
 
       <Content />
 

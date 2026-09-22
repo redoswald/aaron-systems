@@ -1,0 +1,22 @@
+---
+interface Props {
+  level?: 'none' | 'transcribed' | 'edited-supervised' | 'edited-unsupervised';
+}
+
+const { level = 'none' } = Astro.props;
+
+const messages = {
+  'transcribed': 'I dictated this and AI transcribed it.',
+  'edited-supervised': 'I dictated this; AI transcribed it and helped edit it while I reviewed every change.',
+  'edited-unsupervised': 'I dictated this; AI transcribed it and then edited it without my line-by-line review.',
+};
+---
+
+{level !== 'none' && (
+  <aside class="not-prose mb-10 px-4 py-3 rounded-lg bg-[var(--bg-secondary)] border-l-2 border-[var(--accent)] text-sm text-[var(--text-secondary)]">
+    {messages[level]}{' '}
+    <a href="/ai" class="text-[var(--accent)] hover:text-[var(--accent-hover)] underline underline-offset-2">
+      How I use AI
+    </a>
+  </aside>
+)}
