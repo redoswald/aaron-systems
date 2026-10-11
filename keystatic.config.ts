@@ -13,10 +13,7 @@ const aiAssistance = fields.select({
 });
 
 export default config({
-  storage:
-    process.env.NODE_ENV === 'development'
-      ? { kind: 'local' }
-      : { kind: 'github', repo: 'redoswald/aaron-systems' },
+  storage: { kind: 'github', repo: 'redoswald/aaron-systems' },
 
   ui: {
     brand: { name: 'aaronos.ai' },

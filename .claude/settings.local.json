@@ -24,7 +24,22 @@
       "Bash(export TMDB_API_KEY)",
       "Bash(node scripts/import-letterboxd.js:*)",
       "Bash(git add:*)",
-      "Bash(git reset:*)"
+      "Bash(git reset:*)",
+      "Bash(find /Users/aaron/Desktop/code/aaron_system/aaron-systems/src -type f \\\\\\( -name \"*.ts\" -o -name \"*.tsx\" \\\\\\) -exec grep -l \"blog\\\\|getCollection\" {} \\\\;)",
+      "Bash(git commit -m ':*)",
+      "Bash(git push:*)",
+      "Bash(git log:*)",
+      "WebFetch(domain:letterboxd.com)",
+      "WebFetch(domain:api.themoviedb.org)",
+      "WebFetch(domain:www.goodreads.com)",
+      "WebFetch(domain:openlibrary.org)",
+      "WebFetch(domain:www.themoviedb.org)",
+      "WebSearch",
+      "Bash(git commit -m ' *)",
+      "Read(//Users/aaron/.claude/projects/**)",
+      "Read(//Users/aaron/.claude/**)",
+      "Bash(npm install *)",
+      "Bash(npm run *)"
     ]
   }
 }
