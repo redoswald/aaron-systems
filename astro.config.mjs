@@ -29,6 +29,7 @@ export default defineConfig({
   redirects: {
     '/blog': '/writing',
     '/blog/[...slug]': '/writing/[...slug]',
+    '/projects/opus': '/projects/intend-tasks',
   },
 
   adapter: vercel()
