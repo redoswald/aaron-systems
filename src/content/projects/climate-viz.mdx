@@ -6,17 +6,17 @@ featured: false
 link: "https://public.tableau.com/app/profile/aaron.oswald/viz/ClimateComparer/CompareCities"
 ---
 
-In the middle of Covid, I was stuck at home in New York during a long, grey spring — the kind where you start Googling average temperatures in places you've never been just to feel something. I kept wondering: where in the world actually *feels* like the weather I want? Not just "warm," but the whole picture — sunshine, temperature swings, seasonal rhythm.
+I built Climate Viz way, way back, in the second COVID spring, while living in New York City. I largely had a feeling of wanting to get out from the grayness and the coldness, and wanted to find what a perfect climate was.
 
-So I built a Tableau dashboard to answer that question.
+## How it works
 
-## How It Works
+Roughly, I grabbed climate data for all of the world's cities, plotted it out in Tableau, and then calculated a similarity score based on sunlight and temperature over the course of 12 months. It's just the Pythagorean distance between two cities: the difference in temperature, squared, plus the difference in sunlight, squared, and take the square root of that. That gets you your distance.
 
-The dashboard pulls historical climate data for cities around the world and lets you compare them side by side. You can look at monthly temperature patterns, sunshine hours, and get a sense of what living somewhere actually feels like across the year — not just the cherry-picked "average high in July" you find on travel blogs.
+## What I learned
 
-The most fun feature is the similarity ranking: pick a city you like, and it'll show you the cities with the most similar climate profiles, ranked by how close their monthly patterns are. It's how I found out that Porto, Portugal has surprisingly similar weather to parts of coastal California — the kind of thing you'd never guess without seeing the data.
+It was very useful. I feel like I take for granted how much I now know about where in the world has similar and different climates. Now there are lots of maps you can find online that say things like: the climate of D.C. is most similar to the climate of the Po River Valley in Italy. Everybody knows that the West Coast has the best climate in the United States, but they might not know that there are random pockets in Colombia or China that also have incredibly beautiful climates.
 
-## The Dashboard
+## The dashboard
 
 <iframe
   src="https://public.tableau.com/views/ClimateComparer/CompareCities?:embed=y&:display_count=no&:showVizHome=no"
@@ -26,10 +26,4 @@ The most fun feature is the similarity ranking: pick a city you like, and it'll 
   allowfullscreen
 ></iframe>
 
-*If the embed doesn't load, you can [view it directly on Tableau Public](https://public.tableau.com/app/profile/aaron.oswald/viz/ClimateComparer/CompareCities).*
-
-## Features
-
-- Compare climate profiles across cities with monthly temperature and sunshine data
-- Find the "most similar" cities to any given city, ranked by monthly distance
-- See how and when different cities diverge in their seasonal cycles
+*If the embed doesn't load, you can view it directly on [Tableau Public](https://public.tableau.com/app/profile/aaron.oswald/viz/ClimateComparer/CompareCities).*
